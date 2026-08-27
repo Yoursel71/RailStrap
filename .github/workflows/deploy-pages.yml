@@ -7,8 +7,6 @@ on:
       - "website/**"
       - "RailStrap/RailStrap.csproj"
       - ".github/workflows/deploy-pages.yml"
-    tags:
-      - "v*"
   workflow_dispatch:
 
 permissions:
