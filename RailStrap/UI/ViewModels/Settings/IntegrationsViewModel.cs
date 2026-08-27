@@ -5,6 +5,9 @@ using Microsoft.Win32;
 
 using CommunityToolkit.Mvvm.Input;
 
+using RailStrap.UI.Elements.Dialogs;
+using RailStrap.Utility;
+
 namespace RailStrap.UI.ViewModels.Settings
 {
     public class IntegrationsViewModel : NotifyPropertyChangedViewModel
@@ -14,6 +17,10 @@ namespace RailStrap.UI.ViewModels.Settings
         public ICommand DeleteIntegrationCommand => new RelayCommand(DeleteIntegration);
 
         public ICommand BrowseIntegrationLocationCommand => new RelayCommand(BrowseIntegrationLocation);
+
+        public ICommand ViewFriendActivityCommand => new RelayCommand(ViewFriendActivity);
+
+        private void ViewFriendActivity() => new FriendActivityWindow().ShowDialog();
 
         private void AddIntegration()
         {
@@ -123,6 +130,41 @@ namespace RailStrap.UI.ViewModels.Settings
         {
             get => App.Settings.Prop.UseDisableAppPatch;
             set => App.Settings.Prop.UseDisableAppPatch = value;
+        }
+
+        public bool AutoRestartOnCrash
+        {
+            get => App.Settings.Prop.AutoRestartOnCrash;
+            set => App.Settings.Prop.AutoRestartOnCrash = value;
+        }
+
+        public bool FriendActivityEnabled
+        {
+            get => App.Settings.Prop.EnableFriendActivityPanel;
+            set => App.Settings.Prop.EnableFriendActivityPanel = value;
+        }
+
+        public bool HasFriendActivityCookie => !string.IsNullOrEmpty(App.Settings.Prop.FriendActivityCookieEncrypted);
+
+        public System.Windows.Visibility CookieSetVisibility => HasFriendActivityCookie ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+
+        // never round-trips the actual decrypted cookie back into the UI - write-only from the
+        // user's perspective, mirroring how a password field behaves
+        private string _friendActivityCookieInput = "";
+        public string FriendActivityCookieInput
+        {
+            get => _friendActivityCookieInput;
+            set
+            {
+                _friendActivityCookieInput = value;
+
+                if (!string.IsNullOrEmpty(value))
+                {
+                    App.Settings.Prop.FriendActivityCookieEncrypted = SecureStorage.Protect(value);
+                    OnPropertyChanged(nameof(HasFriendActivityCookie));
+                    OnPropertyChanged(nameof(CookieSetVisibility));
+                }
+            }
         }
         public ObservableCollection<CustomIntegration> CustomIntegrations
         {

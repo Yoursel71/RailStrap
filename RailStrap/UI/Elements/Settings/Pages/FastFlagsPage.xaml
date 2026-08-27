@@ -55,7 +55,21 @@
             </ComboBox>
         </controls:OptionControl>
 
-        <controls:OptionControl 
+        <TextBlock Text="{x:Static resources:Strings.Menu_FastFlags_Presets_Categories_Performance}" FontSize="16" FontWeight="Medium" Margin="0,16,0,0" />
+
+        <controls:OptionControl
+            Header="{x:Static resources:Strings.Menu_FastFlags_Presets_MaxFPS_Title}"
+            Description="{x:Static resources:Strings.Menu_FastFlags_Presets_MaxFPS_Description}">
+            <ui:NumberBox Margin="5,0,0,0" Width="200" Min="0" Max="1000" IntegersOnly="True" PlaceholderText="{x:Static resources:Strings.Common_Unlimited}" Value="{Binding MaxFPS, Mode=TwoWay}" />
+        </controls:OptionControl>
+
+        <controls:OptionControl
+            Header="{x:Static resources:Strings.Menu_FastFlags_Presets_PingOverlay_Title}"
+            Description="{x:Static resources:Strings.Menu_FastFlags_Presets_PingOverlay_Description}">
+            <ui:ToggleSwitch IsChecked="{Binding EnablePingOverlay, Mode=TwoWay}" />
+        </controls:OptionControl>
+
+        <controls:OptionControl
             Margin="0,24,0,0"
             Header="{x:Static resources:Strings.Menu_FastFlags_Reset_Title}">
             <ui:ToggleSwitch IsChecked="{Binding ResetConfiguration, Mode=TwoWay}" />

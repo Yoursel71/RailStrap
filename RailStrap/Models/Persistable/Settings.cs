@@ -33,5 +33,19 @@ namespace RailStrap.Models.Persistable
 
         // mod preset configuration
         public bool UseDisableAppPatch { get; set; } = false;
+
+        // performance / overlay
+        public int MaxFPSValue { get; set; } = 0;
+        public bool EnablePingOverlay { get; set; } = false;
+
+        // reliability
+        public bool AutoRestartOnCrash { get; set; } = false;
+
+        // friend activity panel (opt-in; see UI/ViewModels/Settings/FriendActivityViewModel.cs)
+        public bool EnableFriendActivityPanel { get; set; } = false;
+        public string FriendActivityCookieEncrypted { get; set; } = "";
+
+        // playtime stats
+        public bool EnablePlaytimeStats { get; set; } = true;
     }
 }

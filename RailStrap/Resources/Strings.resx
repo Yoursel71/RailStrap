@@ -186,6 +186,12 @@
   <data name="Common.Browse" xml:space="preserve">
     <value>Browse</value>
   </data>
+  <data name="Common.Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="Common.OpenFolder" xml:space="preserve">
+    <value>Open folder</value>
+  </data>
   <data name="Common.Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
@@ -772,6 +778,24 @@ Selecting 'No' will ignore this warning and continue installation.</value>
   </data>
   <data name="Menu.FastFlags.Presets.Categories.Rendering" xml:space="preserve">
     <value>Rendering and Graphics</value>
+  </data>
+  <data name="Menu.FastFlags.Presets.Categories.Performance" xml:space="preserve">
+    <value>Performance</value>
+  </data>
+  <data name="Menu.FastFlags.Presets.MaxFPS.Title" xml:space="preserve">
+    <value>Max FPS</value>
+  </data>
+  <data name="Menu.FastFlags.Presets.MaxFPS.Description" xml:space="preserve">
+    <value>Uncap or raise Roblox's frame rate limit. Leave blank to use the default.</value>
+  </data>
+  <data name="Menu.FastFlags.Presets.PingOverlay.Title" xml:space="preserve">
+    <value>Show ping overlay</value>
+  </data>
+  <data name="Menu.FastFlags.Presets.PingOverlay.Description" xml:space="preserve">
+    <value>Shows a small floating ping display in the corner of the screen while in a game.</value>
+  </data>
+  <data name="Common.Unlimited" xml:space="preserve">
+    <value>Default</value>
   </data>
   <data name="Menu.FastFlags.ManagerEnabled.Title" xml:space="preserve">
     <value>Allow RailStrap to manage Fast Flags</value>
@@ -1402,5 +1426,100 @@ Defaulting to {1}.</value>
   </data>
   <data name="Menu.FastFlagEditor.AllowlistInformation" xml:space="preserve">
     <value>Due to the [Fast Flag allowlist update]({0}), most custom Fast Flags will have no effect on the Roblox player.</value>
+  </data>
+
+  <data name="Menu.Plugins.Title" xml:space="preserve">
+    <value>Studio Plugins</value>
+  </data>
+  <data name="Menu.Plugins.Description" xml:space="preserve">
+    <value>Manage the plugins installed for Roblox Studio. Disabling a plugin keeps its file but stops Studio from loading it.</value>
+  </data>
+  <data name="Menu.Plugins.Empty" xml:space="preserve">
+    <value>No plugins found. Install some through Roblox Studio's plugin manager, then come back here to manage them.</value>
+  </data>
+  <data name="Menu.Plugins.DeleteConfirm" xml:space="preserve">
+    <value>Are you sure you want to permanently delete the plugin '{0}'?</value>
+  </data>
+
+  <data name="Menu.Gallery.Title" xml:space="preserve">
+    <value>Gallery</value>
+  </data>
+  <data name="Menu.Gallery.Description" xml:space="preserve">
+    <value>Browse and install community themes and mods.</value>
+  </data>
+  <data name="Menu.Gallery.Themes" xml:space="preserve">
+    <value>Themes</value>
+  </data>
+  <data name="Menu.Gallery.Mods" xml:space="preserve">
+    <value>Mods</value>
+  </data>
+  <data name="Menu.Gallery.Install" xml:space="preserve">
+    <value>Install</value>
+  </data>
+  <data name="Menu.Gallery.LoadFailed" xml:space="preserve">
+    <value>Couldn't load the gallery right now. Check your internet connection and try again later.</value>
+  </data>
+  <data name="Menu.Gallery.InstallFailed" xml:space="preserve">
+    <value>Failed to install '{0}': {1}</value>
+  </data>
+
+  <data name="Menu.Stats.Title" xml:space="preserve">
+    <value>Playtime Stats</value>
+  </data>
+  <data name="Menu.Stats.Description" xml:space="preserve">
+    <value>See how much time you've spent in each game, tracked locally on this device.</value>
+  </data>
+  <data name="Menu.Stats.Enable.Title" xml:space="preserve">
+    <value>Track playtime</value>
+  </data>
+  <data name="Menu.Stats.Enable.Description" xml:space="preserve">
+    <value>Session lengths are recorded locally and never leave your device.</value>
+  </data>
+  <data name="Menu.Stats.Empty" xml:space="preserve">
+    <value>No sessions recorded yet. Play something!</value>
+  </data>
+
+  <data name="Menu.Integrations.Reliability.Title" xml:space="preserve">
+    <value>Reliability</value>
+  </data>
+  <data name="Menu.Integrations.AutoRestartOnCrash.Title" xml:space="preserve">
+    <value>Restart Roblox automatically if it crashes</value>
+  </data>
+  <data name="Menu.Integrations.AutoRestartOnCrash.Description" xml:space="preserve">
+    <value>Only triggers on an abnormal exit, not when you close Roblox yourself.</value>
+  </data>
+
+  <data name="Menu.FriendActivity.Title" xml:space="preserve">
+    <value>Friend Activity</value>
+  </data>
+  <data name="Menu.FriendActivity.Description" xml:space="preserve">
+    <value>Optionally see what your friends are playing right now, without needing Discord. This requires your own Roblox session cookie, which is encrypted and stored only on this device, and is never sent anywhere except directly to Roblox's own servers.</value>
+  </data>
+  <data name="Menu.FriendActivity.Enable.Title" xml:space="preserve">
+    <value>Enable friend activity panel</value>
+  </data>
+  <data name="Menu.FriendActivity.Cookie.Title" xml:space="preserve">
+    <value>Roblox session cookie (.ROBLOSECURITY)</value>
+  </data>
+  <data name="Menu.FriendActivity.Cookie.Placeholder" xml:space="preserve">
+    <value>Paste your cookie here</value>
+  </data>
+  <data name="Menu.FriendActivity.Cookie.Set" xml:space="preserve">
+    <value>Cookie saved (encrypted)</value>
+  </data>
+  <data name="Menu.FriendActivity.View" xml:space="preserve">
+    <value>View friend activity</value>
+  </data>
+  <data name="Menu.FriendActivity.InGame" xml:space="preserve">
+    <value>In a game</value>
+  </data>
+  <data name="Menu.FriendActivity.InStudio" xml:space="preserve">
+    <value>In Roblox Studio</value>
+  </data>
+  <data name="Menu.FriendActivity.Online" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="Menu.FriendActivity.Offline" xml:space="preserve">
+    <value>Offline</value>
   </data>
 </root>

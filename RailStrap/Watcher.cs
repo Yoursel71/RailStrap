@@ -1,6 +1,7 @@
 ﻿using RailStrap.AppData;
 using RailStrap.Integrations;
 using RailStrap.Models;
+using RailStrap.UI.Elements.Overlay;
 
 namespace RailStrap
 {
@@ -15,6 +16,8 @@ namespace RailStrap
         public readonly ActivityWatcher? ActivityWatcher;
 
         public readonly DiscordRichPresence? RichPresence;
+
+        public readonly PingOverlay? PingOverlay;
 
         public Watcher()
         {
@@ -59,23 +62,65 @@ namespace RailStrap
                     ActivityWatcher.OnAppClose += delegate
                     {
                         App.Logger.WriteLine(LOG_IDENT, "Received desktop app exit, closing Roblox");
-                        using var process = Process.GetProcessById(_watcherData.ProcessId);
-                        process.CloseMainWindow();
+                        CloseProcess(_watcherData.ProcessId);
                     };
                 }
 
                 if (App.Settings.Prop.UseDiscordRichPresence)
                     RichPresence = new(ActivityWatcher);
+
+                if (App.Settings.Prop.EnablePingOverlay)
+                    PingOverlay = new(ActivityWatcher);
+
+                if (App.Settings.Prop.EnablePlaytimeStats)
+                    ActivityWatcher.OnGameLeave += (_, _) => RecordPlaytimeSession();
             }
 
             _notifyIcon = new(this);
         }
 
+        private bool _intentionalClose = false;
+
         public void KillRobloxProcess() => CloseProcess(_watcherData!.ProcessId, true);
+
+        private void RecordPlaytimeSession()
+        {
+            const string LOG_IDENT = "Watcher::RecordPlaytimeSession";
+
+            var activity = ActivityWatcher?.History.FirstOrDefault();
+
+            if (activity is null || activity.TimeLeft is null)
+                return;
+
+            int minutes = (int)(activity.TimeLeft.Value - activity.TimeJoined).TotalMinutes;
+
+            if (minutes < 1)
+                return;
+
+            try
+            {
+                App.PlaytimeStats.Prop.Sessions.Add(new PlaytimeSession
+                {
+                    PlaceName = activity.UniverseDetails?.Data.Name ?? $"Place {activity.PlaceId}",
+                    UniverseId = activity.UniverseId,
+                    TimeJoined = activity.TimeJoined,
+                    DurationMinutes = minutes
+                });
+
+                App.PlaytimeStats.Save();
+            }
+            catch (Exception ex)
+            {
+                App.Logger.WriteException(LOG_IDENT, ex);
+            }
+        }
 
         public void CloseProcess(int pid, bool force = false)
         {
             const string LOG_IDENT = "Watcher::CloseProcess";
+
+            if (pid == _watcherData?.ProcessId)
+                _intentionalClose = true;
 
             try
             {
@@ -103,13 +148,59 @@ namespace RailStrap
 
         public async Task Run()
         {
+            const string LOG_IDENT = "Watcher::Run";
+
             if (!_lock.IsAcquired || _watcherData is null)
                 return;
 
             ActivityWatcher?.Start();
 
-            while (Utilities.GetProcessesSafe().Any(x => x.Id == _watcherData.ProcessId))
-                await Task.Delay(1000);
+            Process? gameProcess = null;
+
+            try
+            {
+                gameProcess = Process.GetProcessById(_watcherData.ProcessId);
+            }
+            catch (ArgumentException)
+            {
+                // process has already exited by the time we got here
+            }
+
+            if (gameProcess is not null)
+            {
+                try
+                {
+                    await gameProcess.WaitForExitAsync();
+                }
+                catch
+                {
+                    // ignore - fall through to the exit check below
+                }
+            }
+
+            if (App.Settings.Prop.AutoRestartOnCrash && !_intentionalClose && gameProcess is not null)
+            {
+                int exitCode = 0;
+
+                try
+                {
+                    exitCode = gameProcess.ExitCode;
+                }
+                catch (Exception ex)
+                {
+                    App.Logger.WriteException(LOG_IDENT, ex);
+                }
+
+                // a clean exit (either the user closed the window, or ActivityWatcher already
+                // saw a graceful disconnect) reports 0; anything else we treat as a crash
+                bool cleanExit = exitCode == 0 || (ActivityWatcher?.History.FirstOrDefault()?.TimeLeft is not null);
+
+                if (!cleanExit)
+                {
+                    App.Logger.WriteLine(LOG_IDENT, $"Roblox exited abnormally (code {exitCode}), attempting restart");
+                    RestartAfterCrash();
+                }
+            }
 
             if (_watcherData.AutoclosePids is not null)
             {
@@ -121,12 +212,33 @@ namespace RailStrap
                 Process.Start(Paths.Process, "-settings -testmode");
         }
 
+        private void RestartAfterCrash()
+        {
+            const string LOG_IDENT = "Watcher::RestartAfterCrash";
+
+            try
+            {
+                string playerPath = new RobloxPlayerData().ExecutablePath;
+                var lastActivity = ActivityWatcher?.Data.PlaceId != 0 ? ActivityWatcher?.Data : ActivityWatcher?.History.FirstOrDefault();
+
+                if (lastActivity is not null && lastActivity.PlaceId != 0)
+                    Process.Start(playerPath, lastActivity.GetInviteDeeplink(false));
+                else
+                    Process.Start(playerPath);
+            }
+            catch (Exception ex)
+            {
+                App.Logger.WriteException(LOG_IDENT, ex);
+            }
+        }
+
         public void Dispose()
         {
             App.Logger.WriteLine("Watcher::Dispose", "Disposing Watcher");
 
             _notifyIcon?.Dispose();
             RichPresence?.Dispose();
+            PingOverlay?.Close();
 
             GC.SuppressFinalize(this);
         }

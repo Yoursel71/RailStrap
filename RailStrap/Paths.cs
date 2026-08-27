@@ -16,6 +16,8 @@
         public static string TempUpdates => Path.Combine(Temp, "Updates");
         public static string TempLogs => Path.Combine(Temp, "Logs");
 
+        public static string RobloxStudioPlugins => Path.Combine(LocalAppData, "Roblox", "Plugins");
+
         public static string Base { get; private set; } = "";
         public static string Downloads { get; private set; } = "";
         public static string Logs { get; private set; } = "";

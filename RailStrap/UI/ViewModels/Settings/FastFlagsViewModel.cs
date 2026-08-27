@@ -59,6 +59,18 @@ namespace RailStrap.UI.ViewModels.Settings
                 }
             }
         }
+        public int MaxFPS
+        {
+            get => int.TryParse(App.FastFlags.GetPreset("Performance.MaxFPS"), out int value) ? value : 0;
+            set => App.FastFlags.SetPreset("Performance.MaxFPS", value > 0 ? value.ToString() : null);
+        }
+
+        public bool EnablePingOverlay
+        {
+            get => App.Settings.Prop.EnablePingOverlay;
+            set => App.Settings.Prop.EnablePingOverlay = value;
+        }
+
         public bool ResetConfiguration
         {
             get => _preResetFlags is not null;

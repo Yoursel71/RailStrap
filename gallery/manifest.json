@@ -1,0 +1,11 @@
+{
+  "themes": [
+    {
+      "name": "Example Theme",
+      "description": "A minimal starter theme showing the default custom bootstrapper layout. Good starting point to build your own from.",
+      "author": "RailStrap",
+      "downloadUrl": "https://raw.githubusercontent.com/Yoursel71/RailStrap/main/gallery/themes/example-theme.zip"
+    }
+  ],
+  "mods": []
+}

@@ -66,6 +66,33 @@
             <ui:ToggleSwitch IsChecked="{Binding DiscordAccountOnProfile, Mode=TwoWay}" />
         </controls:OptionControl>
 
+        <TextBlock Text="{x:Static resources:Strings.Menu_Integrations_Reliability_Title}" FontSize="20" FontWeight="Medium" Margin="0,16,0,0" />
+
+        <controls:OptionControl
+            Header="{x:Static resources:Strings.Menu_Integrations_AutoRestartOnCrash_Title}"
+            Description="{x:Static resources:Strings.Menu_Integrations_AutoRestartOnCrash_Description}">
+            <ui:ToggleSwitch IsChecked="{Binding AutoRestartOnCrash, Mode=TwoWay}" />
+        </controls:OptionControl>
+
+        <TextBlock Text="{x:Static resources:Strings.Menu_FriendActivity_Title}" FontSize="20" FontWeight="Medium" Margin="0,16,0,0" />
+        <TextBlock Text="{x:Static resources:Strings.Menu_FriendActivity_Description}" TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+
+        <controls:OptionControl
+            Header="{x:Static resources:Strings.Menu_FriendActivity_Enable_Title}"
+            x:Name="FriendActivityOption">
+            <ui:ToggleSwitch IsChecked="{Binding FriendActivityEnabled, Mode=TwoWay}" />
+        </controls:OptionControl>
+
+        <StackPanel Margin="0,8,0,0" IsEnabled="{Binding InnerContent.IsChecked, ElementName=FriendActivityOption, Mode=OneWay}">
+            <TextBlock Text="{x:Static resources:Strings.Menu_FriendActivity_Cookie_Title}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            <ui:PasswordBox Margin="0,4,0,0" PlaceholderText="{x:Static resources:Strings.Menu_FriendActivity_Cookie_Placeholder}" Password="{Binding FriendActivityCookieInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <StackPanel Orientation="Horizontal" Margin="0,8,0,0" Visibility="{Binding CookieSetVisibility}">
+                <ui:SymbolIcon Symbol="CheckmarkCircle24" Foreground="{DynamicResource SystemFillColorSuccessBrush}" />
+                <TextBlock Margin="4,0,0,0" Text="{x:Static resources:Strings.Menu_FriendActivity_Cookie_Set}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+            <ui:Button Margin="0,8,0,0" Content="{x:Static resources:Strings.Menu_FriendActivity_View}" Command="{Binding ViewFriendActivityCommand, Mode=OneTime}" IsEnabled="{Binding HasFriendActivityCookie}" />
+        </StackPanel>
+
         <TextBlock Text="{x:Static resources:Strings.Menu_Integrations_Custom_Title}" FontSize="20" FontWeight="Medium" Margin="0,16,0,0" />
         <TextBlock Text="{x:Static resources:Strings.Menu_Integrations_Custom_Description}" TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
         <Grid Margin="0,8,0,0">

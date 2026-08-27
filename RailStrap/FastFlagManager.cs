@@ -24,6 +24,8 @@ namespace RailStrap
 
             { "Rendering.TextureQuality.OverrideEnabled", "DFFlagTextureQualityOverrideEnabled" },
             { "Rendering.TextureQuality.Level", "DFIntTextureQualityOverride" },
+
+            { "Performance.MaxFPS", "DFIntTaskSchedulerTargetFps" },
         };
 
         public static IReadOnlyDictionary<MSAAMode, string?> MSAAModes => new Dictionary<MSAAMode, string?>

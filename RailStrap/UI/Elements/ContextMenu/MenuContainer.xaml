@@ -61,6 +61,18 @@
                     </Grid>
                 </MenuItem.Header>
             </MenuItem>
+            <MenuItem x:Name="HopServerMenuItem" Visibility="Collapsed" Click="HopServerMenuItem_Click">
+                <MenuItem.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="24" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <ui:SymbolIcon Grid.Column="0" Symbol="ArrowSync24"/>
+                        <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="4,0,0,0" Text="{x:Static resources:Strings.ContextMenu_ServerInformation_Reroll}" />
+                    </Grid>
+                </MenuItem.Header>
+            </MenuItem>
             <MenuItem x:Name="GameHistoryMenuItem" Click="JoinLastServerMenuItem_Click" Visibility="Collapsed">
                 <MenuItem.Header>
                     <Grid>

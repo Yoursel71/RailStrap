@@ -431,7 +431,19 @@ namespace RailStrap.Resources {
                 return ResourceManager.GetString("Common.Browse", resourceCulture);
             }
         }
-        
+
+        public static string Common_Refresh {
+            get {
+                return ResourceManager.GetString("Common.Refresh", resourceCulture);
+            }
+        }
+
+        public static string Common_OpenFolder {
+            get {
+                return ResourceManager.GetString("Common.OpenFolder", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
@@ -2939,7 +2951,43 @@ namespace RailStrap.Resources {
                 return ResourceManager.GetString("Menu.FastFlags.Presets.Categories.Rendering", resourceCulture);
             }
         }
-        
+
+        public static string Menu_FastFlags_Presets_Categories_Performance {
+            get {
+                return ResourceManager.GetString("Menu.FastFlags.Presets.Categories.Performance", resourceCulture);
+            }
+        }
+
+        public static string Menu_FastFlags_Presets_MaxFPS_Title {
+            get {
+                return ResourceManager.GetString("Menu.FastFlags.Presets.MaxFPS.Title", resourceCulture);
+            }
+        }
+
+        public static string Menu_FastFlags_Presets_MaxFPS_Description {
+            get {
+                return ResourceManager.GetString("Menu.FastFlags.Presets.MaxFPS.Description", resourceCulture);
+            }
+        }
+
+        public static string Menu_FastFlags_Presets_PingOverlay_Title {
+            get {
+                return ResourceManager.GetString("Menu.FastFlags.Presets.PingOverlay.Title", resourceCulture);
+            }
+        }
+
+        public static string Menu_FastFlags_Presets_PingOverlay_Description {
+            get {
+                return ResourceManager.GetString("Menu.FastFlags.Presets.PingOverlay.Description", resourceCulture);
+            }
+        }
+
+        public static string Common_Unlimited {
+            get {
+                return ResourceManager.GetString("Common.Unlimited", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Direct3D [exclusive fullscreen]({0}) using Alt+Enter is enabled by default..
         /// </summary>
@@ -3654,6 +3702,126 @@ namespace RailStrap.Resources {
             get {
                 return ResourceManager.GetString("Uninstaller.Uninstall", resourceCulture);
             }
+        }
+
+        public static string Menu_Plugins_Title {
+            get { return ResourceManager.GetString("Menu.Plugins.Title", resourceCulture); }
+        }
+
+        public static string Menu_Plugins_Description {
+            get { return ResourceManager.GetString("Menu.Plugins.Description", resourceCulture); }
+        }
+
+        public static string Menu_Plugins_Empty {
+            get { return ResourceManager.GetString("Menu.Plugins.Empty", resourceCulture); }
+        }
+
+        public static string Menu_Plugins_DeleteConfirm {
+            get { return ResourceManager.GetString("Menu.Plugins.DeleteConfirm", resourceCulture); }
+        }
+
+        public static string Menu_Gallery_Title {
+            get { return ResourceManager.GetString("Menu.Gallery.Title", resourceCulture); }
+        }
+
+        public static string Menu_Gallery_Description {
+            get { return ResourceManager.GetString("Menu.Gallery.Description", resourceCulture); }
+        }
+
+        public static string Menu_Gallery_Themes {
+            get { return ResourceManager.GetString("Menu.Gallery.Themes", resourceCulture); }
+        }
+
+        public static string Menu_Gallery_Mods {
+            get { return ResourceManager.GetString("Menu.Gallery.Mods", resourceCulture); }
+        }
+
+        public static string Menu_Gallery_Install {
+            get { return ResourceManager.GetString("Menu.Gallery.Install", resourceCulture); }
+        }
+
+        public static string Menu_Gallery_LoadFailed {
+            get { return ResourceManager.GetString("Menu.Gallery.LoadFailed", resourceCulture); }
+        }
+
+        public static string Menu_Gallery_InstallFailed {
+            get { return ResourceManager.GetString("Menu.Gallery.InstallFailed", resourceCulture); }
+        }
+
+        public static string Menu_Stats_Title {
+            get { return ResourceManager.GetString("Menu.Stats.Title", resourceCulture); }
+        }
+
+        public static string Menu_Stats_Description {
+            get { return ResourceManager.GetString("Menu.Stats.Description", resourceCulture); }
+        }
+
+        public static string Menu_Stats_Enable_Title {
+            get { return ResourceManager.GetString("Menu.Stats.Enable.Title", resourceCulture); }
+        }
+
+        public static string Menu_Stats_Enable_Description {
+            get { return ResourceManager.GetString("Menu.Stats.Enable.Description", resourceCulture); }
+        }
+
+        public static string Menu_Stats_Empty {
+            get { return ResourceManager.GetString("Menu.Stats.Empty", resourceCulture); }
+        }
+
+        public static string Menu_Integrations_Reliability_Title {
+            get { return ResourceManager.GetString("Menu.Integrations.Reliability.Title", resourceCulture); }
+        }
+
+        public static string Menu_Integrations_AutoRestartOnCrash_Title {
+            get { return ResourceManager.GetString("Menu.Integrations.AutoRestartOnCrash.Title", resourceCulture); }
+        }
+
+        public static string Menu_Integrations_AutoRestartOnCrash_Description {
+            get { return ResourceManager.GetString("Menu.Integrations.AutoRestartOnCrash.Description", resourceCulture); }
+        }
+
+        public static string Menu_FriendActivity_Title {
+            get { return ResourceManager.GetString("Menu.FriendActivity.Title", resourceCulture); }
+        }
+
+        public static string Menu_FriendActivity_Description {
+            get { return ResourceManager.GetString("Menu.FriendActivity.Description", resourceCulture); }
+        }
+
+        public static string Menu_FriendActivity_Enable_Title {
+            get { return ResourceManager.GetString("Menu.FriendActivity.Enable.Title", resourceCulture); }
+        }
+
+        public static string Menu_FriendActivity_Cookie_Title {
+            get { return ResourceManager.GetString("Menu.FriendActivity.Cookie.Title", resourceCulture); }
+        }
+
+        public static string Menu_FriendActivity_Cookie_Placeholder {
+            get { return ResourceManager.GetString("Menu.FriendActivity.Cookie.Placeholder", resourceCulture); }
+        }
+
+        public static string Menu_FriendActivity_Cookie_Set {
+            get { return ResourceManager.GetString("Menu.FriendActivity.Cookie.Set", resourceCulture); }
+        }
+
+        public static string Menu_FriendActivity_View {
+            get { return ResourceManager.GetString("Menu.FriendActivity.View", resourceCulture); }
+        }
+
+        public static string Menu_FriendActivity_InGame {
+            get { return ResourceManager.GetString("Menu.FriendActivity.InGame", resourceCulture); }
+        }
+
+        public static string Menu_FriendActivity_InStudio {
+            get { return ResourceManager.GetString("Menu.FriendActivity.InStudio", resourceCulture); }
+        }
+
+        public static string Menu_FriendActivity_Online {
+            get { return ResourceManager.GetString("Menu.FriendActivity.Online", resourceCulture); }
+        }
+
+        public static string Menu_FriendActivity_Offline {
+            get { return ResourceManager.GetString("Menu.FriendActivity.Offline", resourceCulture); }
         }
     }
 }

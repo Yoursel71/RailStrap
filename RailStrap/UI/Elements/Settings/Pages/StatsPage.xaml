@@ -1,0 +1,53 @@
+<ui:UiPage x:Class="RailStrap.UI.Elements.Settings.Pages.StatsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:models="clr-namespace:RailStrap.UI.ViewModels.Settings"
+      xmlns:controls="clr-namespace:RailStrap.UI.Elements.Controls"
+      xmlns:resources="clr-namespace:RailStrap.Resources"
+      mc:Ignorable="d"
+      d:DataContext="{d:DesignInstance models:StatsViewModel, IsDesignTimeCreatable=True}"
+      d:DesignHeight="600" d:DesignWidth="800"
+      Title="StatsPage"
+      Scrollable="True">
+    <StackPanel Margin="0,0,14,14">
+        <TextBlock Text="{x:Static resources:Strings.Menu_Stats_Description}" TextWrapping="Wrap" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+
+        <controls:OptionControl
+            Margin="0,16,0,0"
+            Header="{x:Static resources:Strings.Menu_Stats_Enable_Title}"
+            Description="{x:Static resources:Strings.Menu_Stats_Enable_Description}">
+            <ui:ToggleSwitch IsChecked="{Binding EnablePlaytimeStats, Mode=TwoWay}" />
+        </controls:OptionControl>
+
+        <TextBlock Text="{x:Static resources:Strings.Menu_Stats_Title}" FontSize="20" FontWeight="Medium" Margin="0,24,0,8" />
+
+        <TextBlock HorizontalAlignment="Center" Margin="0,16,0,0" Text="{x:Static resources:Strings.Menu_Stats_Empty}" TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Visibility="{Binding EmptyVisibility}" />
+
+        <ItemsControl ItemsSource="{Binding Entries}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="0,6,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding PlaceName}" />
+                            <TextBlock Grid.Column="1" Text="{Binding DurationText}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        </Grid>
+                        <Border Grid.Row="1" Margin="0,4,0,0" Height="8" CornerRadius="4" Background="{DynamicResource ControlFillColorDefaultBrush}">
+                            <Border HorizontalAlignment="Left" Width="{Binding BarWidth}" CornerRadius="4" Background="{DynamicResource AccentFillColorDefaultBrush}" />
+                        </Border>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </StackPanel>
+</ui:UiPage>

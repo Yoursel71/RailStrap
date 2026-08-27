@@ -71,7 +71,10 @@ namespace RailStrap.UI.Elements.ContextMenu
 
             Dispatcher.Invoke(() => {
                 if (_activityWatcher.Data.ServerType == ServerType.Public)
+                {
                     InviteDeeplinkMenuItem.Visibility = Visibility.Visible;
+                    HopServerMenuItem.Visibility = Visibility.Visible;
+                }
 
                 ServerDetailsMenuItem.Visibility = Visibility.Visible;
             });
@@ -81,6 +84,7 @@ namespace RailStrap.UI.Elements.ContextMenu
         {
             Dispatcher.Invoke(() => {
                 InviteDeeplinkMenuItem.Visibility = Visibility.Collapsed;
+                HopServerMenuItem.Visibility = Visibility.Collapsed;
                 ServerDetailsMenuItem.Visibility = Visibility.Collapsed;
 
                 _serverInformationWindow?.Close();
@@ -107,6 +111,8 @@ namespace RailStrap.UI.Elements.ContextMenu
         private void InviteDeeplinkMenuItem_Click(object sender, RoutedEventArgs e) => Clipboard.SetDataObject(_activityWatcher?.Data.GetInviteDeeplink());
 
         private void ServerDetailsMenuItem_Click(object sender, RoutedEventArgs e) => ShowServerInformationWindow();
+
+        private void HopServerMenuItem_Click(object sender, RoutedEventArgs e) => _activityWatcher?.Data.RerollServerCommand.Execute(null);
 
         private void LogTracerMenuItem_Click(object sender, RoutedEventArgs e)
         {

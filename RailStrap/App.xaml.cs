@@ -56,6 +56,10 @@ namespace RailStrap
 
         public static readonly JsonManager<State> State = new();
 
+        public static readonly LazyJsonManager<GalleryState> Gallery = new(nameof(Gallery));
+
+        public static readonly LazyJsonManager<PlaytimeStats> PlaytimeStats = new(nameof(PlaytimeStats));
+
         public static readonly LazyJsonManager<DistributionState> PlayerState = new(nameof(PlayerState));
 
         public static readonly LazyJsonManager<DistributionState> StudioState = new(nameof(StudioState));
