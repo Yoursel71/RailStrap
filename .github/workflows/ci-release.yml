@@ -46,7 +46,7 @@ jobs:
       # NOTE: unsigned build - RailStrap does not have its own code-signing certificate/SignPath
       # account yet, so Windows SmartScreen will warn on first run. Set one up here if that changes.
       - name: Download artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: RailStrap (Release) (${{ github.sha }})
           path: release
@@ -74,7 +74,7 @@ jobs:
 
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: RailStrap (Release) (${{ github.sha }})
           path: release
