@@ -7,12 +7,11 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
   title: "RailStrap — A better Roblox launcher",
-  description:
-    "RailStrap is a free, open-source, third-party bootstrapper for Roblox with extra features, built for privacy and performance.",
+  description: "A private, open-source Roblox launcher for Windows.",
   icons: { icon: siteAsset("/logo.png") },
   openGraph: {
     title: "RailStrap — A better Roblox launcher",
-    description: "A free, open-source Roblox bootstrapper for Windows, built for privacy and control.",
+    description: "A private, open-source Roblox launcher for Windows.",
     type: "website",
   },
 };

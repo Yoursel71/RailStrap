@@ -1,11 +1,7 @@
 import { Nav } from "@/components/nav";
 import { Hero } from "@/components/hero";
-import { Features } from "@/components/features";
-import { PlaytimeFeature } from "@/components/playtime-feature";
-import { DownloadSteps } from "@/components/download-steps";
-import { Privacy } from "@/components/privacy";
+import { DownloadCTA } from "@/components/download-cta";
 import { FAQ } from "@/components/faq";
-import { Footer } from "@/components/footer";
 import { getAppVersion } from "@/lib/version";
 
 export default function Home() {
@@ -15,12 +11,8 @@ export default function Home() {
     <>
       <Nav />
       <Hero version={version} />
-      <Features />
-      <PlaytimeFeature />
-      <DownloadSteps />
-      <Privacy />
+      <DownloadCTA version={version} />
       <FAQ />
-      <Footer />
     </>
   );
 }

@@ -8,27 +8,26 @@ import {
 const items = [
   {
     q: "Roblox won't launch, or the download fails",
-    a: "Usually antivirus or firewall software blocking RailStrap from reaching Roblox's servers. Temporarily allow it through your firewall/antivirus and try again.",
+    a: "Allow RailStrap through your firewall or antivirus, then retry.",
   },
   {
     q: "RailStrap crashes or won't open",
     a: (
       <>
-        Try reinstalling the latest release. If that doesn&apos;t help, delete{" "}
+        Reinstall. Still broken? Reset{" "}
         <code className="rounded bg-white/10 px-1.5 py-0.5 font-mono text-[12.5px]">
           %LocalAppData%\RailStrap
-        </code>{" "}
-        to reset your configuration, then reinstall.
+        </code>, then retry.
       </>
     ),
   },
   {
     q: "Windows SmartScreen is blocking the installer",
-    a: 'Expected — RailStrap ships unsigned. Click "More info", then "Run anyway".',
+    a: 'Expected. Choose "More info", then "Run anyway".',
   },
   {
     q: "Discord Rich Presence isn't showing up",
-    a: "Make sure Activity Tracking and Discord Rich Presence are both enabled in Integrations settings, and Discord is running before you launch Roblox.",
+    a: "Enable both integration toggles. Open Discord before Roblox.",
   },
   {
     q: "Still stuck?",
@@ -42,8 +41,7 @@ const items = [
           className="underline underline-offset-2"
         >
           GitHub Issues
-        </a>{" "}
-        — RailStrap&apos;s crash/error dialogs can generate a pre-filled report for you.
+        </a>.
       </>
     ),
   },
@@ -56,9 +54,9 @@ export function FAQ() {
         <p className="mb-2.5 text-xs font-bold uppercase tracking-wider text-[hsl(217,100%,68%)]">
           Help
         </p>
-        <h2 className="mb-3 text-[28px] font-extrabold tracking-tight">Common issues</h2>
+        <h2 className="mb-3 text-[28px] font-extrabold tracking-tight">Quick fixes.</h2>
         <p className="mb-8 text-[15px] text-muted-foreground">
-          Quick fixes for the most frequent problems.
+          Short answers. No hunting.
         </p>
 
         <Accordion type="single" collapsible className="flex flex-col gap-2.5">

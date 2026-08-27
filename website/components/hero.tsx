@@ -1,10 +1,71 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { ArrowDownToLine, Github, ShieldCheck } from "lucide-react";
+import { useReducedMotion } from "framer-motion";
+import { ShieldCheck } from "lucide-react";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
-import { Button } from "@/components/ui/button";
 import { siteAsset } from "@/lib/site";
+
+const TYPEWRITER_WORDS = ["upgraded.", "polished.", "optimized.", "personalized."];
+
+function TypewriterText() {
+  const shouldReduceMotion = useReducedMotion();
+  const [wordIndex, setWordIndex] = useState(0);
+  const [displayedText, setDisplayedText] = useState(TYPEWRITER_WORDS[0]);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    if (shouldReduceMotion) {
+      setWordIndex(0);
+      setDisplayedText(TYPEWRITER_WORDS[0]);
+      setIsDeleting(false);
+      return;
+    }
+
+    const currentWord = TYPEWRITER_WORDS[wordIndex];
+    let delay = isDeleting ? 45 : 85;
+
+    if (!isDeleting && displayedText === currentWord) {
+      delay = 1600;
+    } else if (isDeleting && displayedText === "") {
+      delay = 250;
+    }
+
+    const timeout = window.setTimeout(() => {
+      if (!isDeleting && displayedText === currentWord) {
+        setIsDeleting(true);
+        return;
+      }
+
+      if (isDeleting && displayedText === "") {
+        setWordIndex((currentIndex) => (currentIndex + 1) % TYPEWRITER_WORDS.length);
+        setIsDeleting(false);
+        return;
+      }
+
+      const nextLength = displayedText.length + (isDeleting ? -1 : 1);
+      setDisplayedText(currentWord.slice(0, nextLength));
+    }, delay);
+
+    return () => window.clearTimeout(timeout);
+  }, [displayedText, isDeleting, shouldReduceMotion, wordIndex]);
+
+  return (
+    <span className="inline-grid align-baseline">
+      <span className="invisible col-start-1 row-start-1 whitespace-nowrap" aria-hidden="true">
+        personalized.
+      </span>
+      <span className="col-start-1 row-start-1 whitespace-nowrap" aria-hidden="true">
+        <span className="bg-gradient-to-br from-[#b49cff] via-[#846fff] to-[#4f9dff] bg-clip-text text-transparent">
+          {displayedText}
+        </span>
+        <span className="ml-[0.08em] inline-block h-[0.82em] w-[0.055em] translate-y-[0.06em] rounded-full bg-[#846fff] align-baseline animate-pulse motion-reduce:hidden" />
+      </span>
+      <span className="sr-only">upgraded.</span>
+    </span>
+  );
+}
 
 export function Hero({ version }: { version: string }) {
   return (
@@ -22,28 +83,12 @@ export function Hero({ version }: { version: string }) {
 
             <h1 className="max-w-[14ch] text-5xl font-extrabold leading-[0.98] tracking-[-0.045em] text-foreground sm:text-6xl md:text-[76px]">
               Your Roblox launcher, {" "}
-              <span className="bg-gradient-to-br from-[#b49cff] via-[#846fff] to-[#4f9dff] bg-clip-text text-transparent">
-                upgraded.
-              </span>
+              <TypewriterText />
             </h1>
 
             <p className="mx-auto mt-6 max-w-[56ch] text-base leading-7 text-muted-foreground sm:text-lg">
-              Launch faster, tune graphics, manage mods and keep useful stats — all from one
-              private, open-source Windows app.
+              Launch. Tune. Track. Keep it local.
             </p>
-
-            <div className="mt-8 flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row">
-              <Button size="lg" className="w-full sm:w-auto" asChild>
-                <a href="https://github.com/Yoursel71/RailStrap/releases/latest" target="_blank" rel="noopener noreferrer">
-                  <ArrowDownToLine /> Download for Windows
-                </a>
-              </Button>
-              <Button size="lg" variant="ghost" className="w-full sm:w-auto" asChild>
-                <a href="https://github.com/Yoursel71/RailStrap" target="_blank" rel="noopener noreferrer">
-                  <Github /> View source
-                </a>
-              </Button>
-            </div>
 
             <p className="mt-4 flex items-center justify-center gap-1.5 text-[12.5px] text-zinc-500">
               <ShieldCheck className="h-3.5 w-3.5" />
