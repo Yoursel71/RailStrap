@@ -310,6 +310,23 @@ namespace RailStrap
             await mutex.ReleaseAsync();
 
             Dialog?.CloseBootstrapper();
+
+            ShowChangelogIfUpdated();
+        }
+
+        private void ShowChangelogIfUpdated()
+        {
+            if (App.State.Prop.LastSeenVersion == App.Version)
+                return;
+
+            if (!App.LaunchSettings.QuietFlag.Active)
+            {
+                if (!string.IsNullOrEmpty(App.State.Prop.LastSeenVersion))
+                    Frontend.ShowChangelogDialog(App.Version);
+
+                App.State.Prop.LastSeenVersion = App.Version;
+                App.State.Save();
+            }
         }
 
         private RegistryKey GetChannelRegistryKey() => Registry.CurrentUser.CreateSubKey($"SOFTWARE\\ROBLOX Corporation\\Environments\\{AppData.RegistryName}\\Channel");

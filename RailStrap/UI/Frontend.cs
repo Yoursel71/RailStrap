@@ -41,6 +41,17 @@ namespace RailStrap.UI
             });
         }
 
+        public static void ShowChangelogDialog(string version)
+        {
+            if (App.LaunchSettings.QuietFlag.Active)
+                return;
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                new ChangelogDialog(version).ShowDialog();
+            });
+        }
+
         public static void ShowConnectivityDialog(string title, string description, MessageBoxImage image, Exception exception)
         {
             if (App.LaunchSettings.QuietFlag.Active)

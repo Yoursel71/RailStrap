@@ -24,8 +24,11 @@ namespace RailStrap.UI.Elements.ContextMenu
     {
         public ServerInformation(Watcher watcher)
         {
-            DataContext = new ServerInformationViewModel(watcher);
+            var viewModel = new ServerInformationViewModel(watcher);
+            DataContext = viewModel;
             InitializeComponent();
+
+            Closed += (_, _) => viewModel.StopPingTimer();
         }
     }
 }

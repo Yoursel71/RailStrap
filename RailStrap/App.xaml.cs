@@ -187,6 +187,22 @@ namespace RailStrap
             return null;
         }
 
+        public static async Task<GithubRelease?> GetReleaseByTag(string tag)
+        {
+            const string LOG_IDENT = "App::GetReleaseByTag";
+
+            try
+            {
+                return await Http.GetJson<GithubRelease>($"https://api.github.com/repos/{ProjectRepository}/releases/tags/{tag}");
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteException(LOG_IDENT, ex);
+            }
+
+            return null;
+        }
+
         public static void SendStat(string key, string value)
         {
             // RailStrap has no analytics backend of its own (WebUrl still points at

@@ -845,7 +845,25 @@ namespace RailStrap.Resources {
                 return ResourceManager.GetString("ContextMenu.ServerInformation.Location", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Ping.
+        /// </summary>
+        public static string ContextMenu_ServerInformation_Ping {
+            get {
+                return ResourceManager.GetString("ContextMenu.ServerInformation.Ping", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Reroll server.
+        /// </summary>
+        public static string ContextMenu_ServerInformation_Reroll {
+            get {
+                return ResourceManager.GetString("ContextMenu.ServerInformation.Reroll", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Location: {0}
         ///Click for more information.
@@ -1343,6 +1361,33 @@ namespace RailStrap.Resources {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to What's new in RailStrap {0}.
+        /// </summary>
+        public static string Dialog_Changelog_Title {
+            get {
+                return ResourceManager.GetString("Dialog.Changelog.Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Loading release notes....
+        /// </summary>
+        public static string Dialog_Changelog_Loading {
+            get {
+                return ResourceManager.GetString("Dialog.Changelog.Loading", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Release notes couldn't be loaded. [View this release on GitHub]({0})..
+        /// </summary>
+        public static string Dialog_Changelog_Unavailable {
+            get {
+                return ResourceManager.GetString("Dialog.Changelog.Unavailable", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Please wait for installation to finish..
         /// </summary>

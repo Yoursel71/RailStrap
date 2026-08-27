@@ -80,6 +80,10 @@ namespace RailStrap.Models.Entities
 
         public ICommand RejoinServerCommand => new RelayCommand(RejoinServer);
 
+        public ICommand RerollServerCommand => new RelayCommand(RerollServer);
+
+        public bool CanReroll => ServerType == ServerType.Public;
+
         private SemaphoreSlim serverQuerySemaphore = new(1, 1);
 
         public string GetInviteDeeplink(bool launchData = true)
@@ -146,6 +150,30 @@ namespace RailStrap.Models.Entities
             return location;
         }
 
+        public async Task<long?> QueryPing()
+        {
+            const string LOG_IDENT = "ActivityData::QueryPing";
+
+            if (!MachineAddressValid)
+                return null;
+
+            try
+            {
+                using var ping = new System.Net.NetworkInformation.Ping();
+                var reply = await ping.SendPingAsync(MachineAddress, 2000);
+
+                if (reply.Status == System.Net.NetworkInformation.IPStatus.Success)
+                    return reply.RoundtripTime;
+            }
+            catch (Exception ex)
+            {
+                App.Logger.WriteLine(LOG_IDENT, $"Failed to ping {MachineAddress}");
+                App.Logger.WriteException(LOG_IDENT, ex);
+            }
+
+            return null;
+        }
+
         public override string ToString() => $"{PlaceId}/{JobId}";
 
         private void RejoinServer()
@@ -153,6 +181,17 @@ namespace RailStrap.Models.Entities
             string playerPath = new RobloxPlayerData().ExecutablePath;
 
             Process.Start(playerPath, GetInviteDeeplink(false));
+        }
+
+        /// <summary>
+        /// Joins a fresh public server for the same place, rather than the specific
+        /// server instance this activity was for
+        /// </summary>
+        private void RerollServer()
+        {
+            string playerPath = new RobloxPlayerData().ExecutablePath;
+
+            Process.Start(playerPath, $"roblox://experiences/start?placeId={PlaceId}");
         }
     }
 }
