@@ -6,12 +6,15 @@ import { DownloadSteps } from "@/components/download-steps";
 import { Privacy } from "@/components/privacy";
 import { FAQ } from "@/components/faq";
 import { Footer } from "@/components/footer";
+import { getAppVersion } from "@/lib/version";
 
 export default function Home() {
+  const version = getAppVersion();
+
   return (
     <>
       <Nav />
-      <Hero />
+      <Hero version={version} />
       <Features />
       <PlaytimeFeature />
       <DownloadSteps />

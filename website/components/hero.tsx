@@ -6,7 +6,7 @@ import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import { Button } from "@/components/ui/button";
 import { siteAsset } from "@/lib/site";
 
-export function Hero() {
+export function Hero({ version }: { version: string }) {
   return (
     <section id="hero" className="relative overflow-hidden">
       <div className="pointer-events-none absolute -left-40 -top-56 h-[34rem] w-[34rem] rounded-full bg-[#6d3fff]/25 blur-[110px]" />
@@ -17,7 +17,7 @@ export function Hero() {
           <div className="flex flex-col items-center px-4">
             <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#7c5cff]/30 bg-[#7c5cff]/10 py-1.5 pl-2 pr-3 text-xs font-semibold text-[#c3b6ff] shadow-[0_0_30px_rgba(124,92,255,.12)]">
               <span className="h-1.5 w-1.5 rounded-full bg-[#9c82ff] shadow-[0_0_0_3px_rgba(124,92,255,.25)]" />
-              Version 2.13.0 · Free and open source
+              Version {version} · Free and open source
             </span>
 
             <h1 className="max-w-[14ch] text-5xl font-extrabold leading-[0.98] tracking-[-0.045em] text-foreground sm:text-6xl md:text-[76px]">
