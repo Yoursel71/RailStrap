@@ -7,8 +7,8 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
     <ApplicationIcon>RailStrap.ico</ApplicationIcon>
-    <Version>2.11.4</Version>
-    <FileVersion>2.11.4</FileVersion>
+    <Version>2.12.0</Version>
+    <FileVersion>2.12.0</FileVersion>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\BootstrapperStyles\RailStrapVideo\Loading.mp4" />
     <EmbeddedResource Include="Resources\CustomBootstrapperSchema.json" />
     <EmbeddedResource Include="Resources\CustomBootstrapperTemplate_Blank.xml" />
     <EmbeddedResource Include="Resources\CustomBootstrapperTemplate_Simple.xml" />
