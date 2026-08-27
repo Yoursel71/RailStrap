@@ -1,6 +1,7 @@
 import { Nav } from "@/components/nav";
 import { Hero } from "@/components/hero";
 import { Features } from "@/components/features";
+import { PlaytimeFeature } from "@/components/playtime-feature";
 import { DownloadSteps } from "@/components/download-steps";
 import { Privacy } from "@/components/privacy";
 import { FAQ } from "@/components/faq";
@@ -12,6 +13,7 @@ export default function Home() {
       <Nav />
       <Hero />
       <Features />
+      <PlaytimeFeature />
       <DownloadSteps />
       <Privacy />
       <FAQ />
