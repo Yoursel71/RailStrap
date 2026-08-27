@@ -12,6 +12,7 @@ namespace RailStrap.UI.Elements.Overlay
     {
         private readonly ActivityWatcher _activityWatcher;
         private readonly DispatcherTimer _timer;
+        private bool _queryInProgress;
 
         public PingOverlay(ActivityWatcher activityWatcher)
         {
@@ -45,8 +46,23 @@ namespace RailStrap.UI.Elements.Overlay
 
         private async void QueryPing()
         {
-            long? ping = await _activityWatcher.Data.QueryPing();
-            PingText.Text = ping is null ? $"{Strings.ContextMenu_ServerInformation_Ping}: --" : $"{Strings.ContextMenu_ServerInformation_Ping}: {ping} ms";
+            if (_queryInProgress)
+                return;
+
+            _queryInProgress = true;
+            ActivityData activity = _activityWatcher.Data;
+
+            try
+            {
+                long? ping = await activity.QueryPing();
+
+                if (activity == _activityWatcher.Data)
+                    PingText.Text = ping is null ? $"{Strings.ContextMenu_ServerInformation_Ping}: --" : $"{Strings.ContextMenu_ServerInformation_Ping}: {ping} ms";
+            }
+            finally
+            {
+                _queryInProgress = false;
+            }
         }
     }
 }

@@ -11,5 +11,7 @@ namespace RailStrap.Models.Entities
             : $"{TotalMinutes}m";
 
         public double BarWidth { get; set; }
+
+        public int SessionCount { get; set; }
     }
 }

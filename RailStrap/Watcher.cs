@@ -7,6 +7,8 @@ namespace RailStrap
 {
     public class Watcher : IDisposable
     {
+        private const int MaxCrashRestartAttempts = 2;
+
         private readonly InterProcessLock _lock = new("Watcher");
 
         private readonly WatcherData? _watcherData;
@@ -53,11 +55,17 @@ namespace RailStrap
             if (_watcherData is null)
                 throw new Exception("Watcher data is invalid");
 
-            if (App.Settings.Prop.EnableActivityTracking)
+            bool activityWatcherRequired =
+                App.Settings.Prop.EnableActivityTracking ||
+                App.Settings.Prop.EnablePingOverlay ||
+                App.Settings.Prop.EnablePlaytimeStats ||
+                App.Settings.Prop.AutoRestartOnCrash;
+
+            if (activityWatcherRequired)
             {
                 ActivityWatcher = new(_watcherData.LogFile);
 
-                if (App.Settings.Prop.UseDisableAppPatch)
+                if (App.Settings.Prop.EnableActivityTracking && App.Settings.Prop.UseDisableAppPatch)
                 {
                     ActivityWatcher.OnAppClose += delegate
                     {
@@ -66,14 +74,14 @@ namespace RailStrap
                     };
                 }
 
-                if (App.Settings.Prop.UseDiscordRichPresence)
+                if (App.Settings.Prop.EnableActivityTracking && App.Settings.Prop.UseDiscordRichPresence)
                     RichPresence = new(ActivityWatcher);
 
                 if (App.Settings.Prop.EnablePingOverlay)
                     PingOverlay = new(ActivityWatcher);
 
                 if (App.Settings.Prop.EnablePlaytimeStats)
-                    ActivityWatcher.OnGameLeave += (_, _) => RecordPlaytimeSession();
+                    ActivityWatcher.OnGameLeave += (_, _) => RecordPlaytimeSession(ActivityWatcher.History.FirstOrDefault());
             }
 
             _notifyIcon = new(this);
@@ -83,16 +91,15 @@ namespace RailStrap
 
         public void KillRobloxProcess() => CloseProcess(_watcherData!.ProcessId, true);
 
-        private void RecordPlaytimeSession()
+        private void RecordPlaytimeSession(ActivityData? activity)
         {
             const string LOG_IDENT = "Watcher::RecordPlaytimeSession";
 
-            var activity = ActivityWatcher?.History.FirstOrDefault();
-
-            if (activity is null || activity.TimeLeft is null)
+            if (activity is null || activity.TimeJoined == default)
                 return;
 
-            int minutes = (int)(activity.TimeLeft.Value - activity.TimeJoined).TotalMinutes;
+            DateTime timeLeft = activity.TimeLeft ?? DateTime.Now;
+            int minutes = (int)(timeLeft - activity.TimeJoined).TotalMinutes;
 
             if (minutes < 1)
                 return;
@@ -178,13 +185,19 @@ namespace RailStrap
                 }
             }
 
-            if (App.Settings.Prop.AutoRestartOnCrash && !_intentionalClose && gameProcess is not null)
+            // A hard crash does not write the normal disconnect log entry, so preserve the
+            // active session before deciding whether Roblox should be restarted.
+            if (App.Settings.Prop.EnablePlaytimeStats && ActivityWatcher?.InGame == true)
+                RecordPlaytimeSession(ActivityWatcher.Data);
+
+            if (App.Settings.Prop.AutoRestartOnCrash && !_intentionalClose)
             {
-                int exitCode = 0;
+                int exitCode = -1;
 
                 try
                 {
-                    exitCode = gameProcess.ExitCode;
+                    if (gameProcess is not null)
+                        exitCode = gameProcess.ExitCode;
                 }
                 catch (Exception ex)
                 {
@@ -193,12 +206,16 @@ namespace RailStrap
 
                 // a clean exit (either the user closed the window, or ActivityWatcher already
                 // saw a graceful disconnect) reports 0; anything else we treat as a crash
-                bool cleanExit = exitCode == 0 || (ActivityWatcher?.History.FirstOrDefault()?.TimeLeft is not null);
+                bool cleanExit = gameProcess is not null && exitCode == 0;
 
-                if (!cleanExit)
+                if (!cleanExit && _watcherData.CrashRestartAttempt < MaxCrashRestartAttempts)
                 {
-                    App.Logger.WriteLine(LOG_IDENT, $"Roblox exited abnormally (code {exitCode}), attempting restart");
-                    RestartAfterCrash();
+                    App.Logger.WriteLine(LOG_IDENT, $"Roblox exited abnormally (code {exitCode}), attempting restart {_watcherData.CrashRestartAttempt + 1}/{MaxCrashRestartAttempts}");
+                    await RestartAfterCrash();
+                }
+                else if (!cleanExit)
+                {
+                    App.Logger.WriteLine(LOG_IDENT, $"Roblox exited abnormally (code {exitCode}), but the automatic restart limit was reached");
                 }
             }
 
@@ -212,19 +229,34 @@ namespace RailStrap
                 Process.Start(Paths.Process, "-settings -testmode");
         }
 
-        private void RestartAfterCrash()
+        private async Task RestartAfterCrash()
         {
             const string LOG_IDENT = "Watcher::RestartAfterCrash";
 
             try
             {
-                string playerPath = new RobloxPlayerData().ExecutablePath;
                 var lastActivity = ActivityWatcher?.Data.PlaceId != 0 ? ActivityWatcher?.Data : ActivityWatcher?.History.FirstOrDefault();
+                string? launchArgument = null;
 
                 if (lastActivity is not null && lastActivity.PlaceId != 0)
-                    Process.Start(playerPath, lastActivity.GetInviteDeeplink(false));
+                    launchArgument = lastActivity.GetInviteDeeplink(false);
+                else if (_watcherData?.LaunchArguments?.StartsWith("roblox", StringComparison.OrdinalIgnoreCase) == true)
+                    launchArgument = _watcherData.LaunchArguments;
+
+                // A short delay avoids immediately colliding with Roblox's process/mutex cleanup.
+                await Task.Delay(TimeSpan.FromSeconds(3));
+
+                var startInfo = new ProcessStartInfo(Paths.Process);
+
+                if (launchArgument is not null)
+                    startInfo.ArgumentList.Add(launchArgument);
                 else
-                    Process.Start(playerPath);
+                    startInfo.ArgumentList.Add("-player");
+
+                startInfo.ArgumentList.Add("-crashrestart");
+                startInfo.ArgumentList.Add((_watcherData!.CrashRestartAttempt + 1).ToString(CultureInfo.InvariantCulture));
+
+                Process.Start(startInfo);
             }
             catch (Exception ex)
             {
@@ -238,7 +270,10 @@ namespace RailStrap
 
             _notifyIcon?.Dispose();
             RichPresence?.Dispose();
-            PingOverlay?.Close();
+            if (PingOverlay is not null)
+                PingOverlay.Dispatcher.Invoke(PingOverlay.Close);
+
+            ActivityWatcher?.Dispose();
 
             GC.SuppressFinalize(this);
         }

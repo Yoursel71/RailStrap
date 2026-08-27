@@ -22,6 +22,9 @@ namespace RailStrap.Models.APIs.Config
 
         [JsonIgnore]
         public GalleryItemKind Kind { get; set; }
+
+        [JsonIgnore]
+        public bool IsInstalled { get; set; }
     }
 
     public class GalleryManifest

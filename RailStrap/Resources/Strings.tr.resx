@@ -1404,4 +1404,118 @@ Otomatiklen {1}'e alınılıyor.</value>
   <data name="Menu.FastFlagEditor.AllowlistInformation" xml:space="preserve">
     <value>[Fast Flag allowlist update]({0}) nedeniyle, çoğu özel Fast Flaglerin Roblox oyuncusu üzerinde hiçbir etkiye sahip olmayacaktır.</value>
   </data>
+  <data name="Menu.Plugins.Title" xml:space="preserve">
+    <value>Studio Eklentileri</value>
+  </data>
+  <data name="Menu.Plugins.Description" xml:space="preserve">
+    <value>Roblox Studio için kurulu eklentileri yönetin. Devre dışı bırakmak dosyayı korur ancak Studio'nun eklentiyi yüklemesini engeller.</value>
+  </data>
+  <data name="Menu.Plugins.Empty" xml:space="preserve">
+    <value>Studio eklentisi bulunamadı. Buradan bir .rbxm veya .rbxmx dosyası içeri aktarabilirsiniz.</value>
+  </data>
+  <data name="Menu.Plugins.DeleteConfirm" xml:space="preserve">
+    <value>'{0}' eklentisini kalıcı olarak silmek istediğinizden emin misiniz?</value>
+  </data>
+  <data name="Menu.Plugins.ImportFailed" xml:space="preserve">
+    <value>'{0}' içeri aktarılamadı: {1}</value>
+  </data>
+  <data name="Menu.Gallery.Title" xml:space="preserve">
+    <value>Galeri</value>
+  </data>
+  <data name="Menu.Gallery.Description" xml:space="preserve">
+    <value>Topluluk temalarına ve modlarına göz atın, güvenle kurun veya kaldırın.</value>
+  </data>
+  <data name="Menu.Gallery.Themes" xml:space="preserve">
+    <value>Temalar</value>
+  </data>
+  <data name="Menu.Gallery.Mods" xml:space="preserve">
+    <value>Modlar</value>
+  </data>
+  <data name="Menu.Gallery.Install" xml:space="preserve">
+    <value>Kur</value>
+  </data>
+  <data name="Menu.Gallery.Uninstall" xml:space="preserve">
+    <value>Kaldır</value>
+  </data>
+  <data name="Menu.Gallery.UninstallConfirm" xml:space="preserve">
+    <value>'{0}' ve onun kurduğu dosyalar kaldırılsın mı?</value>
+  </data>
+  <data name="Menu.Gallery.UninstallFailed" xml:space="preserve">
+    <value>'{0}' tarafından kurulan bazı dosyalar kaldırılamadı. RailStrap'ın yönettiği klasörlerin dışındaki hiçbir dosyaya dokunulmadı.</value>
+  </data>
+  <data name="Menu.Gallery.LoadFailed" xml:space="preserve">
+    <value>Galeri şu anda yüklenemedi. İnternet bağlantınızı kontrol edip yeniden deneyin.</value>
+  </data>
+  <data name="Menu.Gallery.InstallFailed" xml:space="preserve">
+    <value>'{0}' kurulamadı: {1}</value>
+  </data>
+  <data name="Menu.Stats.Title" xml:space="preserve">
+    <value>Oyun Süresi İstatistikleri</value>
+  </data>
+  <data name="Menu.Stats.Description" xml:space="preserve">
+    <value>Bu cihazda yerel olarak tutulan oyun sürelerinizi görün ve dışa aktarın.</value>
+  </data>
+  <data name="Menu.Stats.Enable.Title" xml:space="preserve">
+    <value>Oyun süresini takip et</value>
+  </data>
+  <data name="Menu.Stats.Enable.Description" xml:space="preserve">
+    <value>Oturum süreleri yalnızca cihazınıza kaydedilir ve dışarı gönderilmez.</value>
+  </data>
+  <data name="Menu.Stats.Empty" xml:space="preserve">
+    <value>Henüz kaydedilmiş bir oturum yok.</value>
+  </data>
+  <data name="Menu.Stats.Sessions" xml:space="preserve">
+    <value>oturum</value>
+  </data>
+  <data name="Menu.Stats.ClearConfirm" xml:space="preserve">
+    <value>Yerel olarak kaydedilmiş tüm oyun süresi oturumları kalıcı olarak silinsin mi?</value>
+  </data>
+  <data name="Menu.Integrations.Reliability.Title" xml:space="preserve">
+    <value>Güvenilirlik</value>
+  </data>
+  <data name="Menu.Integrations.AutoRestartOnCrash.Title" xml:space="preserve">
+    <value>Roblox çökerse otomatik yeniden başlat</value>
+  </data>
+  <data name="Menu.Integrations.AutoRestartOnCrash.Description" xml:space="preserve">
+    <value>Yalnızca olağan dışı kapanışta çalışır ve en fazla iki kez yeniden dener.</value>
+  </data>
+  <data name="Menu.FriendActivity.Title" xml:space="preserve">
+    <value>Arkadaş Etkinliği</value>
+  </data>
+  <data name="Menu.FriendActivity.Description" xml:space="preserve">
+    <value>Arkadaşlarınızın ne oynadığını isteğe bağlı olarak görün. Roblox oturum çereziniz şifrelenerek yalnızca bu cihazda tutulur ve yalnızca Roblox sunucularına gönderilir.</value>
+  </data>
+  <data name="Menu.FriendActivity.Enable.Title" xml:space="preserve">
+    <value>Arkadaş etkinliği panelini etkinleştir</value>
+  </data>
+  <data name="Menu.FriendActivity.Cookie.Title" xml:space="preserve">
+    <value>Roblox oturum çerezi (.ROBLOSECURITY)</value>
+  </data>
+  <data name="Menu.FriendActivity.Cookie.Placeholder" xml:space="preserve">
+    <value>Çerezinizi buraya yapıştırın</value>
+  </data>
+  <data name="Menu.FriendActivity.Cookie.Set" xml:space="preserve">
+    <value>Çerez şifrelenerek kaydedildi</value>
+  </data>
+  <data name="Menu.FriendActivity.Cookie.Save" xml:space="preserve">
+    <value>Güvenle kaydet</value>
+  </data>
+  <data name="Menu.FriendActivity.View" xml:space="preserve">
+    <value>Arkadaş etkinliğini görüntüle</value>
+  </data>
+  <data name="Menu.FriendActivity.InGame" xml:space="preserve">
+    <value>Oyunda</value>
+  </data>
+  <data name="Menu.FriendActivity.InStudio" xml:space="preserve">
+    <value>Roblox Studio'da</value>
+  </data>
+  <data name="Menu.FriendActivity.Online" xml:space="preserve">
+    <value>Çevrimiçi</value>
+  </data>
+  <data name="Menu.FriendActivity.Offline" xml:space="preserve">
+    <value>Çevrimdışı</value>
+  </data>
+  <data name="Menu.FriendActivity.Empty" xml:space="preserve">
+    <value>Bu hesapta arkadaş bulunamadı.</value>
+  </data>
 </root>

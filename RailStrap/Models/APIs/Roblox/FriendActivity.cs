@@ -13,6 +13,9 @@ namespace RailStrap.Models.APIs.Roblox
     {
         [JsonPropertyName("data")]
         public List<FriendEntry> Data { get; set; } = new();
+
+        [JsonPropertyName("nextPageCursor")]
+        public string? NextPageCursor { get; set; }
     }
 
     public class FriendEntry
@@ -54,5 +57,7 @@ namespace RailStrap.Models.APIs.Roblox
         public string Name { get; set; } = "";
 
         public string Status { get; set; } = "";
+
+        public int PresenceType { get; set; }
     }
 }

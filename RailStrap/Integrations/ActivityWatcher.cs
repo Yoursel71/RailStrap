@@ -92,7 +92,14 @@ namespace RailStrap.Integrations
                         .GetFiles()
                         .Where(x => x.Name.Contains("Player", StringComparison.OrdinalIgnoreCase) && x.CreationTime <= DateTime.Now)
                         .OrderByDescending(x => x.CreationTime)
-                        .First();
+                        .FirstOrDefault()!;
+
+                    if (logFileInfo is null)
+                    {
+                        App.Logger.WriteLine(LOG_IDENT, "No player log file found yet, waiting...");
+                        await Task.Delay(1000);
+                        continue;
+                    }
 
                     if (logFileInfo.CreationTime.AddSeconds(15) > DateTime.Now)
                         break;

@@ -7,5 +7,9 @@
         public string? LogFile { get; set; }
 
         public List<int>? AutoclosePids { get; set; }
+
+        public string? LaunchArguments { get; set; }
+
+        public int CrashRestartAttempt { get; set; }
     }
 }

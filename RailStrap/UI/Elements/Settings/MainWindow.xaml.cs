@@ -15,12 +15,19 @@ namespace RailStrap.UI.Elements.Settings
     public partial class MainWindow : INavigationWindow
     {
         private Models.Persistable.WindowState _state => App.State.Prop.SettingsWindow;
+        private string _savedSettingsSnapshot;
 
         public MainWindow(bool showAlreadyRunningWarning)
         {
             var viewModel = new MainWindowViewModel();
 
-            viewModel.RequestSaveNoticeEvent += (_, _) => SettingsSavedSnackbar.Show();
+            _savedSettingsSnapshot = JsonSerializer.Serialize(App.Settings.Prop);
+
+            viewModel.RequestSaveNoticeEvent += (_, _) =>
+            {
+                _savedSettingsSnapshot = JsonSerializer.Serialize(App.Settings.Prop);
+                SettingsSavedSnackbar.Show();
+            };
             viewModel.RequestCloseWindowEvent += (_, _) => Close();
 
             DataContext = viewModel;
@@ -81,7 +88,9 @@ namespace RailStrap.UI.Elements.Settings
 
         private void WpfUiWindow_Closing(object sender, CancelEventArgs e)
         {
-            if (App.FastFlags.Changed || App.PendingSettingTasks.Any())
+            bool settingsChanged = _savedSettingsSnapshot != JsonSerializer.Serialize(App.Settings.Prop);
+
+            if (settingsChanged || App.FastFlags.Changed || App.PendingSettingTasks.Any())
             {
                 var result = Frontend.ShowMessageBox(Strings.Menu_UnsavedChanges, MessageBoxImage.Warning, MessageBoxButton.YesNo);
 

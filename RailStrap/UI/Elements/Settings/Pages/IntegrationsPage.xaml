@@ -85,7 +85,16 @@
 
         <StackPanel Margin="0,8,0,0" IsEnabled="{Binding InnerContent.IsChecked, ElementName=FriendActivityOption, Mode=OneWay}">
             <TextBlock Text="{x:Static resources:Strings.Menu_FriendActivity_Cookie_Title}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-            <ui:PasswordBox Margin="0,4,0,0" PlaceholderText="{x:Static resources:Strings.Menu_FriendActivity_Cookie_Placeholder}" Password="{Binding FriendActivityCookieInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <Grid Margin="0,4,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <ui:PasswordBox Grid.Column="0" PlaceholderText="{x:Static resources:Strings.Menu_FriendActivity_Cookie_Placeholder}" Password="{Binding FriendActivityCookieInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <ui:Button Grid.Column="1" Margin="8,0,0,0" Icon="Save24" Content="{x:Static resources:Strings.Menu_FriendActivity_Cookie_Save}" Command="{Binding SaveFriendActivityCookieCommand}" />
+                <ui:Button Grid.Column="2" Margin="8,0,0,0" Icon="Delete24" Appearance="Danger" Content="{x:Static resources:Strings.Common_Delete}" Command="{Binding ClearFriendActivityCookieCommand}" IsEnabled="{Binding HasFriendActivityCookie}" />
+            </Grid>
             <StackPanel Orientation="Horizontal" Margin="0,8,0,0" Visibility="{Binding CookieSetVisibility}">
                 <ui:SymbolIcon Symbol="CheckmarkCircle24" Foreground="{DynamicResource SystemFillColorSuccessBrush}" />
                 <TextBlock Margin="4,0,0,0" Text="{x:Static resources:Strings.Menu_FriendActivity_Cookie_Set}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />

@@ -27,7 +27,12 @@
 
         <ui:ProgressRing Grid.Row="1" Margin="0,24,0,24" IsIndeterminate="True" Visibility="{Binding LoadingVisibility}" />
 
-        <TextBlock Grid.Row="1" Margin="16" TextWrapping="Wrap" Text="{Binding ErrorMessage}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Visibility="{Binding ErrorVisibility}" />
+        <StackPanel Grid.Row="1" Margin="16" Visibility="{Binding ErrorVisibility}">
+            <TextBlock TextWrapping="Wrap" Text="{Binding ErrorMessage}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            <ui:Button Margin="0,8,0,0" HorizontalAlignment="Left" Icon="ArrowClockwise24" Content="{x:Static resources:Strings.Common_Refresh}" Command="{Binding RefreshCommand}" />
+        </StackPanel>
+
+        <TextBlock Grid.Row="1" Margin="16" HorizontalAlignment="Center" Text="{x:Static resources:Strings.Menu_FriendActivity_Empty}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Visibility="{Binding EmptyVisibility}" />
 
         <ScrollViewer Grid.Row="1" MaxHeight="420" Visibility="{Binding ContentVisibility}">
             <ItemsControl Margin="12" ItemsSource="{Binding Friends}">

@@ -40,6 +40,8 @@ namespace RailStrap
 
         public LaunchFlag ForceFlag                 { get; } = new("force");
 
+        public LaunchFlag CrashRestartFlag          { get; } = new("crashrestart");
+
 #if DEBUG
         public bool BypassUpdateCheck => true;
 #else

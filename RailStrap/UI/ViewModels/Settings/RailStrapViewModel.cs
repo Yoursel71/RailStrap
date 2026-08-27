@@ -60,7 +60,9 @@ namespace RailStrap.UI.ViewModels.Settings
                 {
                     App.Settings.FileLocation,
                     App.State.FileLocation,
-                    App.FastFlags.FileLocation
+                    App.FastFlags.FileLocation,
+                    App.Gallery.FileLocation,
+                    App.PlaytimeStats.FileLocation
                 };
 
                 AddFilesToZipStream(zipStream, files, "Config/");
@@ -78,7 +80,7 @@ namespace RailStrap.UI.ViewModels.Settings
             zipStream.Finish();
             memStream.Position = 0;
 
-            using var outputStream = File.OpenWrite(dialog.FileName);
+            using var outputStream = File.Create(dialog.FileName);
             memStream.CopyTo(outputStream);
 
             Process.Start("explorer.exe", $"/select,\"{dialog.FileName}\"");
@@ -113,7 +115,9 @@ namespace RailStrap.UI.ViewModels.Settings
                     {
                         "Settings.json" => App.Settings.FileLocation,
                         "State.json" => App.State.FileLocation,
-                        "FastFlags.json" => App.FastFlags.FileLocation,
+                        "ClientAppSettings.json" or "FastFlags.json" => App.FastFlags.FileLocation,
+                        "Gallery.json" => App.Gallery.FileLocation,
+                        "PlaytimeStats.json" => App.PlaytimeStats.FileLocation,
                         _ => null
                     };
 
@@ -135,6 +139,8 @@ namespace RailStrap.UI.ViewModels.Settings
                 App.Settings.Load(false);
                 App.State.Load(false);
                 App.FastFlags.Load(false);
+                App.Gallery.Load(false);
+                App.PlaytimeStats.Load(false);
 
                 Frontend.ShowMessageBox(Strings.Menu_RailStrap_ImportData_Success, MessageBoxImage.Information);
             }

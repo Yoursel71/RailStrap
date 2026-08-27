@@ -3792,6 +3792,10 @@ namespace RailStrap.Resources {
             get { return ResourceManager.GetString("Menu.Plugins.DeleteConfirm", resourceCulture); }
         }
 
+        public static string Menu_Plugins_ImportFailed {
+            get { return ResourceManager.GetString("Menu.Plugins.ImportFailed", resourceCulture); }
+        }
+
         public static string Menu_Gallery_Title {
             get { return ResourceManager.GetString("Menu.Gallery.Title", resourceCulture); }
         }
@@ -3820,6 +3824,18 @@ namespace RailStrap.Resources {
             get { return ResourceManager.GetString("Menu.Gallery.InstallFailed", resourceCulture); }
         }
 
+        public static string Menu_Gallery_Uninstall {
+            get { return ResourceManager.GetString("Menu.Gallery.Uninstall", resourceCulture); }
+        }
+
+        public static string Menu_Gallery_UninstallConfirm {
+            get { return ResourceManager.GetString("Menu.Gallery.UninstallConfirm", resourceCulture); }
+        }
+
+        public static string Menu_Gallery_UninstallFailed {
+            get { return ResourceManager.GetString("Menu.Gallery.UninstallFailed", resourceCulture); }
+        }
+
         public static string Menu_Stats_Title {
             get { return ResourceManager.GetString("Menu.Stats.Title", resourceCulture); }
         }
@@ -3838,6 +3854,14 @@ namespace RailStrap.Resources {
 
         public static string Menu_Stats_Empty {
             get { return ResourceManager.GetString("Menu.Stats.Empty", resourceCulture); }
+        }
+
+        public static string Menu_Stats_Sessions {
+            get { return ResourceManager.GetString("Menu.Stats.Sessions", resourceCulture); }
+        }
+
+        public static string Menu_Stats_ClearConfirm {
+            get { return ResourceManager.GetString("Menu.Stats.ClearConfirm", resourceCulture); }
         }
 
         public static string Menu_Integrations_Reliability_Title {
@@ -3876,6 +3900,10 @@ namespace RailStrap.Resources {
             get { return ResourceManager.GetString("Menu.FriendActivity.Cookie.Set", resourceCulture); }
         }
 
+        public static string Menu_FriendActivity_Cookie_Save {
+            get { return ResourceManager.GetString("Menu.FriendActivity.Cookie.Save", resourceCulture); }
+        }
+
         public static string Menu_FriendActivity_View {
             get { return ResourceManager.GetString("Menu.FriendActivity.View", resourceCulture); }
         }
@@ -3894,6 +3922,10 @@ namespace RailStrap.Resources {
 
         public static string Menu_FriendActivity_Offline {
             get { return ResourceManager.GetString("Menu.FriendActivity.Offline", resourceCulture); }
+        }
+
+        public static string Menu_FriendActivity_Empty {
+            get { return ResourceManager.GetString("Menu.FriendActivity.Empty", resourceCulture); }
         }
     }
 }

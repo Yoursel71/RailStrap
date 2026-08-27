@@ -1464,6 +1464,9 @@ Defaulting to {1}.</value>
   <data name="Menu.Plugins.DeleteConfirm" xml:space="preserve">
     <value>Are you sure you want to permanently delete the plugin '{0}'?</value>
   </data>
+  <data name="Menu.Plugins.ImportFailed" xml:space="preserve">
+    <value>Failed to import '{0}': {1}</value>
+  </data>
 
   <data name="Menu.Gallery.Title" xml:space="preserve">
     <value>Gallery</value>
@@ -1486,6 +1489,15 @@ Defaulting to {1}.</value>
   <data name="Menu.Gallery.InstallFailed" xml:space="preserve">
     <value>Failed to install '{0}': {1}</value>
   </data>
+  <data name="Menu.Gallery.Uninstall" xml:space="preserve">
+    <value>Uninstall</value>
+  </data>
+  <data name="Menu.Gallery.UninstallConfirm" xml:space="preserve">
+    <value>Remove '{0}' and the files installed by it?</value>
+  </data>
+  <data name="Menu.Gallery.UninstallFailed" xml:space="preserve">
+    <value>Some files installed by '{0}' could not be removed. Nothing outside RailStrap's managed folders was touched.</value>
+  </data>
 
   <data name="Menu.Stats.Title" xml:space="preserve">
     <value>Playtime Stats</value>
@@ -1501,6 +1513,12 @@ Defaulting to {1}.</value>
   </data>
   <data name="Menu.Stats.Empty" xml:space="preserve">
     <value>No sessions recorded yet. Play something!</value>
+  </data>
+  <data name="Menu.Stats.Sessions" xml:space="preserve">
+    <value>sessions</value>
+  </data>
+  <data name="Menu.Stats.ClearConfirm" xml:space="preserve">
+    <value>Permanently clear all locally recorded playtime sessions?</value>
   </data>
 
   <data name="Menu.Integrations.Reliability.Title" xml:space="preserve">
@@ -1531,6 +1549,9 @@ Defaulting to {1}.</value>
   <data name="Menu.FriendActivity.Cookie.Set" xml:space="preserve">
     <value>Cookie saved (encrypted)</value>
   </data>
+  <data name="Menu.FriendActivity.Cookie.Save" xml:space="preserve">
+    <value>Save securely</value>
+  </data>
   <data name="Menu.FriendActivity.View" xml:space="preserve">
     <value>View friend activity</value>
   </data>
@@ -1545,5 +1566,8 @@ Defaulting to {1}.</value>
   </data>
   <data name="Menu.FriendActivity.Offline" xml:space="preserve">
     <value>Offline</value>
+  </data>
+  <data name="Menu.FriendActivity.Empty" xml:space="preserve">
+    <value>No friends were found on this account.</value>
   </data>
 </root>

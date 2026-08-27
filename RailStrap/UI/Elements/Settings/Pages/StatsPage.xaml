@@ -22,7 +22,24 @@
             <ui:ToggleSwitch IsChecked="{Binding EnablePlaytimeStats, Mode=TwoWay}" />
         </controls:OptionControl>
 
-        <TextBlock Text="{x:Static resources:Strings.Menu_Stats_Title}" FontSize="20" FontWeight="Medium" Margin="0,24,0,8" />
+        <Grid Margin="0,24,0,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="{x:Static resources:Strings.Menu_Stats_Title}" FontSize="20" FontWeight="Medium" />
+                <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}">
+                    <Run Text="{Binding TotalPlaytimeText}" />
+                    <Run Text=" • " />
+                    <Run Text="{Binding SessionCount}" />
+                    <Run Text=" {x:Static resources:Strings.Menu_Stats_Sessions}" />
+                </TextBlock>
+            </StackPanel>
+            <ui:Button Grid.Column="1" Margin="0,0,8,0" Icon="ArrowExportRtl24" Content="{x:Static resources:Strings.Common_Export}" Command="{Binding ExportCommand}" IsEnabled="{Binding HasEntries}" />
+            <ui:Button Grid.Column="2" Icon="Delete24" Appearance="Danger" Content="{x:Static resources:Strings.Common_Delete}" Command="{Binding ClearCommand}" IsEnabled="{Binding HasEntries}" />
+        </Grid>
 
         <TextBlock HorizontalAlignment="Center" Margin="0,16,0,0" Text="{x:Static resources:Strings.Menu_Stats_Empty}" TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Visibility="{Binding EmptyVisibility}" />
 

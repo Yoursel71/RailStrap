@@ -37,6 +37,7 @@ namespace RailStrap.Integrations
                 if (response.StatusCode == System.Net.HttpStatusCode.Forbidden && response.Headers.TryGetValues("x-csrf-token", out var values))
                 {
                     csrfToken = values.FirstOrDefault();
+                    response.Dispose();
                     continue;
                 }
 
@@ -53,34 +54,63 @@ namespace RailStrap.Integrations
             if (string.IsNullOrEmpty(cookie))
                 throw new InvalidOperationException("No cookie configured");
 
-            var userResponse = await SendAuthenticated(HttpMethod.Get, "https://users.roblox.com/v1/users/authenticated", cookie);
+            using var userResponse = await SendAuthenticated(HttpMethod.Get, "https://users.roblox.com/v1/users/authenticated", cookie);
             userResponse.EnsureSuccessStatusCode();
             var user = await userResponse.Content.ReadFromJsonAsync<AuthenticatedUserResponse>();
 
             if (user is null)
                 throw new InvalidOperationException("Could not resolve the authenticated user");
 
-            var friendsResponse = await SendAuthenticated(HttpMethod.Get, $"https://friends.roblox.com/v1/users/{user.Id}/friends", cookie);
-            friendsResponse.EnsureSuccessStatusCode();
-            var friends = await friendsResponse.Content.ReadFromJsonAsync<FriendsListResponse>() ?? new();
+            var friends = new List<FriendEntry>();
+            var seenCursors = new HashSet<string>(StringComparer.Ordinal);
+            string? cursor = null;
+            int pageCount = 0;
 
-            if (friends.Data.Count == 0)
+            do
+            {
+                if (++pageCount > 10)
+                    throw new InvalidDataException("Roblox returned too many friend-list pages.");
+
+                string url = $"https://friends.roblox.com/v1/users/{user.Id}/friends?limit=100";
+
+                if (!string.IsNullOrEmpty(cursor))
+                    url += $"&cursor={Uri.EscapeDataString(cursor)}";
+
+                using var friendsResponse = await SendAuthenticated(HttpMethod.Get, url, cookie);
+                friendsResponse.EnsureSuccessStatusCode();
+                var page = await friendsResponse.Content.ReadFromJsonAsync<FriendsListResponse>() ?? new();
+
+                friends.AddRange(page.Data);
+                cursor = page.NextPageCursor;
+
+                if (!string.IsNullOrEmpty(cursor) && !seenCursors.Add(cursor))
+                    throw new InvalidDataException("Roblox returned a repeated friend-list cursor.");
+            }
+            while (!string.IsNullOrEmpty(cursor));
+
+            if (friends.Count == 0)
                 return new List<FriendActivityEntry>();
 
-            var presenceResponse = await SendAuthenticated(
-                HttpMethod.Post,
-                "https://presence.roblox.com/v1/presence/users",
-                cookie,
-                new { userIds = friends.Data.Select(x => x.Id).ToArray() }
-            );
-            presenceResponse.EnsureSuccessStatusCode();
-            var presences = await presenceResponse.Content.ReadFromJsonAsync<PresenceListResponse>() ?? new();
+            var presences = new List<PresenceEntry>();
+
+            foreach (var friendBatch in friends.Chunk(50))
+            {
+                using var presenceResponse = await SendAuthenticated(
+                    HttpMethod.Post,
+                    "https://presence.roblox.com/v1/presence/users",
+                    cookie,
+                    new { userIds = friendBatch.Select(x => x.Id).ToArray() }
+                );
+                presenceResponse.EnsureSuccessStatusCode();
+                var responseData = await presenceResponse.Content.ReadFromJsonAsync<PresenceListResponse>() ?? new();
+                presences.AddRange(responseData.UserPresences);
+            }
 
             var result = new List<FriendActivityEntry>();
 
-            foreach (var friend in friends.Data)
+            foreach (var friend in friends)
             {
-                var presence = presences.UserPresences.FirstOrDefault(x => x.UserId == friend.Id);
+                var presence = presences.FirstOrDefault(x => x.UserId == friend.Id);
 
                 string status = presence?.PresenceType switch
                 {
@@ -90,11 +120,19 @@ namespace RailStrap.Integrations
                     _ => Strings.Menu_FriendActivity_Offline
                 };
 
-                result.Add(new FriendActivityEntry { Name = friend.Name, Status = status });
+                result.Add(new FriendActivityEntry
+                {
+                    Name = friend.Name,
+                    Status = status,
+                    PresenceType = presence?.PresenceType ?? 0
+                });
             }
 
             return result
-                .OrderByDescending(x => x.Status != Strings.Menu_FriendActivity_Offline)
+                .OrderByDescending(x => x.PresenceType == 2)
+                .ThenByDescending(x => x.PresenceType == 3)
+                .ThenByDescending(x => x.PresenceType == 1)
+                .ThenBy(x => x.Name, StringComparer.CurrentCultureIgnoreCase)
                 .ToList();
         }
     }

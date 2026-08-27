@@ -645,9 +645,9 @@ namespace RailStrap
 
             if (String.IsNullOrEmpty(logFileName))
             {
-                App.Logger.WriteLine(LOG_IDENT, "Unable to identify log file");
-                Frontend.ShowPlayerErrorDialog();
-                return;
+                // Continue with a null path. ActivityWatcher can discover the newest player log
+                // itself, while process-only features such as crash recovery still need Watcher.
+                App.Logger.WriteLine(LOG_IDENT, "Unable to identify log file immediately; watcher will retry discovery");
             }
             else
             {
@@ -690,15 +690,27 @@ namespace RailStrap
                     autoclosePids.Add(pid);
             }
 
-            if (App.Settings.Prop.EnableActivityTracking || App.LaunchSettings.TestModeFlag.Active || autoclosePids.Any())
+            bool watcherRequired =
+                App.Settings.Prop.EnableActivityTracking ||
+                App.Settings.Prop.EnablePingOverlay ||
+                App.Settings.Prop.EnablePlaytimeStats ||
+                App.Settings.Prop.AutoRestartOnCrash ||
+                App.LaunchSettings.TestModeFlag.Active ||
+                autoclosePids.Any();
+
+            if (watcherRequired)
             {
                 using var ipl = new InterProcessLock("Watcher", TimeSpan.FromSeconds(5));
 
-                var watcherData = new WatcherData 
-                { 
-                    ProcessId = _appPid, 
-                    LogFile = logFileName, 
-                    AutoclosePids = autoclosePids
+                int.TryParse(App.LaunchSettings.CrashRestartFlag.Data, out int crashRestartAttempt);
+
+                var watcherData = new WatcherData
+                {
+                    ProcessId = _appPid,
+                    LogFile = logFileName,
+                    AutoclosePids = autoclosePids,
+                    LaunchArguments = App.LaunchSettings.RobloxLaunchArgs,
+                    CrashRestartAttempt = crashRestartAttempt
                 };
 
                 string watcherDataArg = Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(watcherData)));
@@ -802,7 +814,7 @@ namespace RailStrap
             var versionComparison = Utilities.CompareVersions(App.Version, releaseInfo.TagName);
 
             // check if we aren't using a deployed build, so we can update to one if a new version comes out
-            if (App.IsProductionBuild && versionComparison == VersionComparison.Equal || versionComparison == VersionComparison.GreaterThan)
+            if ((App.IsProductionBuild && versionComparison == VersionComparison.Equal) || versionComparison == VersionComparison.GreaterThan)
             {
                 App.Logger.WriteLine(LOG_IDENT, "No updates found");
                 return false;
@@ -827,21 +839,34 @@ namespace RailStrap
 
                 File.Copy(Paths.Process, downloadLocation, true);
 #else
-                var asset = releaseInfo.Assets![0];
+                var asset = releaseInfo.Assets?
+                    .FirstOrDefault(x =>
+                        x.Name.StartsWith("RailStrap-", StringComparison.OrdinalIgnoreCase) &&
+                        x.Name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase));
+
+                if (asset is null)
+                    throw new InvalidHTTPResponseException($"Release {releaseInfo.TagName} does not contain a RailStrap executable");
 
                 string downloadLocation = Path.Combine(Paths.TempUpdates, asset.Name);
+                string temporaryDownloadLocation = downloadLocation + ".download";
 
                 Directory.CreateDirectory(Paths.TempUpdates);
 
                 App.Logger.WriteLine(LOG_IDENT, $"Downloading {releaseInfo.TagName}...");
-                
-                if (!File.Exists(downloadLocation))
-                {
-                    var response = await App.HttpClient.GetAsync(asset.BrowserDownloadUrl);
 
-                    await using var fileStream = new FileStream(downloadLocation, FileMode.OpenOrCreate, FileAccess.Write);
+                using (var response = await App.HttpClient.GetAsync(asset.BrowserDownloadUrl, HttpCompletionOption.ResponseHeadersRead))
+                {
+                    response.EnsureSuccessStatusCode();
+
+                    await using var fileStream = new FileStream(temporaryDownloadLocation, FileMode.Create, FileAccess.Write, FileShare.None);
                     await response.Content.CopyToAsync(fileStream);
+                    await fileStream.FlushAsync();
                 }
+
+                if (new FileInfo(temporaryDownloadLocation).Length < 1024 * 1024)
+                    throw new InvalidDataException("Downloaded updater executable is unexpectedly small");
+
+                File.Move(temporaryDownloadLocation, downloadLocation, true);
 #endif
 
                 App.Logger.WriteLine(LOG_IDENT, $"Starting {version}...");

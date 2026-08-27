@@ -20,6 +20,10 @@ namespace RailStrap.UI.ViewModels.Settings
 
         public ICommand ViewFriendActivityCommand => new RelayCommand(ViewFriendActivity);
 
+        public ICommand SaveFriendActivityCookieCommand => new RelayCommand(SaveFriendActivityCookie);
+
+        public ICommand ClearFriendActivityCookieCommand => new RelayCommand(ClearFriendActivityCookie);
+
         private void ViewFriendActivity() => new FriendActivityWindow().ShowDialog();
 
         private void AddIntegration()
@@ -148,23 +152,54 @@ namespace RailStrap.UI.ViewModels.Settings
 
         public System.Windows.Visibility CookieSetVisibility => HasFriendActivityCookie ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
 
-        // never round-trips the actual decrypted cookie back into the UI - write-only from the
-        // user's perspective, mirroring how a password field behaves
+        // Never round-trip the decrypted cookie back into the UI. The input is only encrypted
+        // after the user explicitly saves it, so partial text is not persisted on every keypress.
         private string _friendActivityCookieInput = "";
         public string FriendActivityCookieInput
         {
             get => _friendActivityCookieInput;
-            set
-            {
-                _friendActivityCookieInput = value;
+            set => _friendActivityCookieInput = value;
+        }
 
-                if (!string.IsNullOrEmpty(value))
-                {
-                    App.Settings.Prop.FriendActivityCookieEncrypted = SecureStorage.Protect(value);
-                    OnPropertyChanged(nameof(HasFriendActivityCookie));
-                    OnPropertyChanged(nameof(CookieSetVisibility));
-                }
-            }
+        private void SaveFriendActivityCookie()
+        {
+            string cookie = NormalizeRobloxCookie(FriendActivityCookieInput);
+
+            if (string.IsNullOrEmpty(cookie))
+                return;
+
+            App.Settings.Prop.FriendActivityCookieEncrypted = SecureStorage.Protect(cookie);
+            _friendActivityCookieInput = "";
+
+            OnPropertyChanged(nameof(FriendActivityCookieInput));
+            OnPropertyChanged(nameof(HasFriendActivityCookie));
+            OnPropertyChanged(nameof(CookieSetVisibility));
+        }
+
+        private void ClearFriendActivityCookie()
+        {
+            App.Settings.Prop.FriendActivityCookieEncrypted = "";
+            _friendActivityCookieInput = "";
+
+            OnPropertyChanged(nameof(FriendActivityCookieInput));
+            OnPropertyChanged(nameof(HasFriendActivityCookie));
+            OnPropertyChanged(nameof(CookieSetVisibility));
+        }
+
+        private static string NormalizeRobloxCookie(string input)
+        {
+            string cookie = input.Trim().Trim('"', '\'');
+            const string cookieName = ".ROBLOSECURITY=";
+            int cookieNameIndex = cookie.IndexOf(cookieName, StringComparison.OrdinalIgnoreCase);
+
+            if (cookieNameIndex >= 0)
+                cookie = cookie[(cookieNameIndex + cookieName.Length)..];
+
+            int separatorIndex = cookie.IndexOf(';');
+            if (separatorIndex >= 0)
+                cookie = cookie[..separatorIndex];
+
+            return cookie.Trim();
         }
         public ObservableCollection<CustomIntegration> CustomIntegrations
         {
