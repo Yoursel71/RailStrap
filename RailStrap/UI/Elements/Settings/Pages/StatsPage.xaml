@@ -31,9 +31,9 @@
             <StackPanel Grid.Column="0">
                 <TextBlock Text="{x:Static resources:Strings.Menu_Stats_Title}" FontSize="20" FontWeight="Medium" />
                 <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}">
-                    <Run Text="{Binding TotalPlaytimeText}" />
+                    <Run Text="{Binding TotalPlaytimeText, Mode=OneWay}" />
                     <Run Text=" • " />
-                    <Run Text="{Binding SessionCount}" />
+                    <Run Text="{Binding SessionCount, Mode=OneWay}" />
                     <Run Text=" {x:Static resources:Strings.Menu_Stats_Sessions}" />
                 </TextBlock>
             </StackPanel>
