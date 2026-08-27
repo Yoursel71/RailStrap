@@ -38,6 +38,10 @@ jobs:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
 
+    permissions:
+      contents: write
+      actions: read
+
     steps:
       # NOTE: unsigned build - RailStrap does not have its own code-signing certificate/SignPath
       # account yet, so Windows SmartScreen will warn on first run. Set one up here if that changes.
@@ -63,6 +67,10 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/release-test')
+
+    permissions:
+      contents: write
+      actions: read
 
     steps:
       - name: Download artifact
