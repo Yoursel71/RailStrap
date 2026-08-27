@@ -12,23 +12,23 @@ const links = [
 
 export function Nav() {
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/70 backdrop-blur-md">
-      <nav className="container flex h-[60px] items-center justify-between">
+    <header className="sticky top-0 z-50 border-b border-white/[0.07] bg-[#09090f]/80 backdrop-blur-xl">
+      <nav className="container flex h-16 items-center justify-between" aria-label="Primary navigation">
         <Link href="#hero" className="flex items-center gap-2 text-[15px] font-bold tracking-tight">
           <Image src="/logo.png" alt="RailStrap logo" width={24} height={24} className="rounded-md" />
           RailStrap
         </Link>
 
-        <div className="hidden gap-6 text-[13.5px] text-muted-foreground sm:flex">
+        <div className="hidden items-center gap-1 text-[13.5px] text-muted-foreground md:flex">
           {links.map((l) => (
-            <a key={l.href} href={l.href} className="transition-colors hover:text-foreground">
+            <a key={l.href} href={l.href} className="rounded-lg px-3 py-2 transition-colors hover:bg-white/[0.04] hover:text-foreground">
               {l.label}
             </a>
           ))}
         </div>
 
         <div className="flex items-center gap-2.5">
-          <Button variant="ghost" size="sm" asChild>
+          <Button variant="ghost" size="sm" className="hidden sm:inline-flex" asChild>
             <a href="https://github.com/Yoursel71/RailStrap" target="_blank" rel="noopener noreferrer">
               <Github /> GitHub
             </a>

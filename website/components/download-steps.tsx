@@ -1,4 +1,5 @@
-import { ShieldCheck } from "lucide-react";
+import { ArrowDownToLine, ShieldCheck } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const steps = [
   {
@@ -43,7 +44,7 @@ export function DownloadSteps() {
           Up and running in about a minute
         </h2>
 
-        <div className="max-w-[720px] overflow-hidden rounded-2xl border border-border">
+        <div className="max-w-[820px] overflow-hidden rounded-2xl border border-border bg-card shadow-2xl shadow-black/20">
           {steps.map((s, i) => (
             <div
               key={s.title}
@@ -59,13 +60,19 @@ export function DownloadSteps() {
           ))}
         </div>
 
-        <div className="mt-6 flex max-w-[720px] items-start gap-3 rounded-2xl border border-border bg-[#0e0e15] px-[18px] py-4 text-[13.5px] text-muted-foreground">
-          <ShieldCheck className="mt-0.5 h-[18px] w-[18px] flex-none text-[#a998ff]" />
-          <div>
-            <strong className="font-semibold text-foreground">No ban risk.</strong> RailStrap
-            only wraps the launch process — it doesn&apos;t interact with the Roblox client the
-            way exploits do.
+        <div className="mt-6 flex max-w-[820px] flex-col gap-4 rounded-2xl border border-[#7c5cff]/20 bg-[#7c5cff]/[0.06] px-5 py-5 text-[13.5px] text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-3">
+            <ShieldCheck className="mt-0.5 h-[18px] w-[18px] flex-none text-[#a998ff]" />
+            <div>
+              <strong className="font-semibold text-foreground">Built to stay out of the game client.</strong><br />
+              RailStrap wraps the launch process; it is not an exploit tool.
+            </div>
           </div>
+          <Button className="flex-none" asChild>
+            <a href="https://github.com/Yoursel71/RailStrap/releases/latest" target="_blank" rel="noopener noreferrer">
+              <ArrowDownToLine /> Get latest release
+            </a>
+          </Button>
         </div>
       </div>
     </section>

@@ -15,28 +15,28 @@ function Feature({
   visual,
 }: FeatureProps) {
   return (
-    <div className="w-full py-20 lg:py-40">
+    <section className="w-full py-20 lg:py-28">
       <div className="container mx-auto">
-        <div className="flex flex-col-reverse lg:flex-row gap-10 lg:items-center">
-          <div className="bg-muted rounded-md w-full aspect-video h-full flex-1 overflow-hidden">
+        <div className="flex flex-col-reverse gap-10 lg:flex-row lg:items-center lg:gap-16">
+          <div className="relative aspect-[989/573] w-full flex-1 overflow-hidden rounded-2xl border border-white/10 bg-[#111119] shadow-2xl shadow-black/30">
             {visual}
           </div>
-          <div className="flex gap-4 pl-0 lg:pl-20 flex-col  flex-1">
+          <div className="flex flex-1 flex-col gap-5">
             <div>
               <Badge>{badge}</Badge>
             </div>
-            <div className="flex gap-2 flex-col">
-              <h2 className="text-xl md:text-3xl md:text-5xl tracking-tighter lg:max-w-xl font-regular text-left">
+            <div className="flex flex-col gap-4">
+              <h2 className="max-w-xl text-left text-3xl font-extrabold tracking-tight md:text-5xl">
                 {title}
               </h2>
-              <p className="text-lg max-w-xl lg:max-w-sm leading-relaxed tracking-tight text-muted-foreground text-left">
+              <p className="max-w-xl text-left text-base leading-7 text-muted-foreground lg:max-w-md">
                 {description}
               </p>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
