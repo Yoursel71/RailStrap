@@ -99,10 +99,14 @@ namespace RailStrap
                 return;
 
             DateTime timeLeft = activity.TimeLeft ?? DateTime.Now;
-            int minutes = (int)(timeLeft - activity.TimeJoined).TotalMinutes;
+            TimeSpan duration = timeLeft - activity.TimeJoined;
 
-            if (minutes < 1)
+            // ignore near-instant joins (connection errors, accidental clicks) but round
+            // any real session up to at least a minute instead of truncating it away
+            if (duration.TotalSeconds < 10)
                 return;
+
+            int minutes = Math.Max(1, (int)Math.Round(duration.TotalMinutes));
 
             try
             {

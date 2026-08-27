@@ -32,10 +32,7 @@
         <ItemsControl Margin="0,8,0,0" ItemsSource="{Binding Plugins}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <ui:CardControl Margin="0,4,0,0">
-                        <ui:CardControl.Icon>
-                            <ui:SymbolIcon Symbol="PuzzleCube24" />
-                        </ui:CardControl.Icon>
+                    <ui:CardControl Margin="0,4,0,0" Icon="PuzzleCube24">
                         <ui:CardControl.Header>
                             <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
                         </ui:CardControl.Header>

@@ -27,10 +27,7 @@
             <ItemsControl ItemsSource="{Binding Themes}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type config:GalleryItem}">
-                        <ui:CardExpander Margin="0,4,0,0" IsExpanded="False">
-                            <ui:CardExpander.Icon>
-                                <ui:SymbolIcon Symbol="PaintBrush24" />
-                            </ui:CardExpander.Icon>
+                        <ui:CardExpander Margin="0,4,0,0" IsExpanded="False" Icon="PaintBrush24">
                             <ui:CardExpander.Header>
                                 <StackPanel>
                                     <TextBlock Text="{Binding Name}" />
@@ -74,10 +71,7 @@
             <ItemsControl ItemsSource="{Binding Mods}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type config:GalleryItem}">
-                        <ui:CardExpander Margin="0,4,0,0" IsExpanded="False">
-                            <ui:CardExpander.Icon>
-                                <ui:SymbolIcon Symbol="WrenchScrewdriver24" />
-                            </ui:CardExpander.Icon>
+                        <ui:CardExpander Margin="0,4,0,0" IsExpanded="False" Icon="WrenchScrewdriver24">
                             <ui:CardExpander.Header>
                                 <StackPanel>
                                     <TextBlock Text="{Binding Name}" />
