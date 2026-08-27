@@ -8,6 +8,7 @@
         {
             BootstrapperStyle.FluentDialog,
             BootstrapperStyle.FluentAeroDialog,
+            BootstrapperStyle.VideoDialog,
             BootstrapperStyle.ClassicFluentDialog,
             BootstrapperStyle.ByfronDialog,
             BootstrapperStyle.ProgressDialog,

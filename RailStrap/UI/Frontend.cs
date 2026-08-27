@@ -101,6 +101,7 @@ namespace RailStrap.UI
                 BootstrapperStyle.ByfronDialog => new ByfronDialog(),
                 BootstrapperStyle.FluentDialog => new FluentDialog(false),
                 BootstrapperStyle.FluentAeroDialog => new FluentDialog(true),
+                BootstrapperStyle.VideoDialog => new VideoDialog(),
                 BootstrapperStyle.CustomDialog => GetCustomBootstrapper(),
                 _ => new FluentDialog(false)
             };

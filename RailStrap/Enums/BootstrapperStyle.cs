@@ -11,6 +11,8 @@
         [EnumName(StaticName = "RailStrap")]
         FluentDialog,
         FluentAeroDialog,
-        CustomDialog
+        CustomDialog,
+        [EnumName(StaticName = "RailStrap (Video)")]
+        VideoDialog
     }
 }

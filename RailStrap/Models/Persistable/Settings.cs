@@ -5,7 +5,7 @@ namespace RailStrap.Models.Persistable
     public class Settings
     {
         // bloxstrap configuration
-        public BootstrapperStyle BootstrapperStyle { get; set; } = BootstrapperStyle.FluentDialog;
+        public BootstrapperStyle BootstrapperStyle { get; set; } = BootstrapperStyle.VideoDialog;
         public BootstrapperIcon BootstrapperIcon { get; set; } = BootstrapperIcon.IconRailStrap;
         public string BootstrapperTitle { get; set; } = App.ProjectName;
         public string BootstrapperIconCustomLocation { get; set; } = "";
