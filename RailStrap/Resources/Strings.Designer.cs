@@ -2196,7 +2196,34 @@ namespace RailStrap.Resources {
                 return ResourceManager.GetString("Logger.NoWriteMode", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Log Viewer.
+        /// </summary>
+        public static string LogViewer_Title {
+            get {
+                return ResourceManager.GetString("LogViewer.Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No log file is available yet..
+        /// </summary>
+        public static string LogViewer_NotFound {
+            get {
+                return ResourceManager.GetString("LogViewer.NotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Find in log (Ctrl+F).
+        /// </summary>
+        public static string LogViewer_Search {
+            get {
+                return ResourceManager.GetString("LogViewer.Search", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Contributors.
         /// </summary>
@@ -2700,7 +2727,52 @@ namespace RailStrap.Resources {
                 return ResourceManager.GetString("Menu.RailStrap.ExportData.ExportLogs", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Import configuration.
+        /// </summary>
+        public static string Menu_RailStrap_ImportData_Title {
+            get {
+                return ResourceManager.GetString("Menu.RailStrap.ImportData.Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Restore settings from a previously exported RailStrap archive..
+        /// </summary>
+        public static string Menu_RailStrap_ImportData_Description {
+            get {
+                return ResourceManager.GetString("Menu.RailStrap.ImportData.Description", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Configuration imported successfully. Restart RailStrap for all changes to take effect..
+        /// </summary>
+        public static string Menu_RailStrap_ImportData_Success {
+            get {
+                return ResourceManager.GetString("Menu.RailStrap.ImportData.Success", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to That archive doesn't contain any recognised RailStrap configuration files..
+        /// </summary>
+        public static string Menu_RailStrap_ImportData_NoneFound {
+            get {
+                return ResourceManager.GetString("Menu.RailStrap.ImportData.NoneFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to import configuration: {0}.
+        /// </summary>
+        public static string Menu_RailStrap_ImportData_Failed {
+            get {
+                return ResourceManager.GetString("Menu.RailStrap.ImportData.Failed", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Export diagnostic data.
         /// </summary>

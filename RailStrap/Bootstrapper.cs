@@ -1579,7 +1579,7 @@ namespace RailStrap
 
                         Frontend.ShowConnectivityDialog(
                             Strings.Dialog_Connectivity_UnableToDownload,
-                            String.Format(Strings.Dialog_Connectivity_UnableToDownloadReason, "[https://bloxstraplabs.com/wiki/help/bloxstrap-cannot-download-roblox/](https://bloxstraplabs.com/wiki/help/bloxstrap-cannot-download-roblox/)"),
+                            String.Format(Strings.Dialog_Connectivity_UnableToDownloadReason, "[https://yoursel71.github.io/RailStrap/#help](https://yoursel71.github.io/RailStrap/#help)"),
                             MessageBoxImage.Error,
                             ex
                         );

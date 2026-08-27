@@ -24,7 +24,7 @@ namespace RailStrap.UI
 
             string info = String.Format(
                 Strings.Dialog_PlayerError_FailedLaunch,
-                $"https://bloxstraplabs.com/wiki/help/roblox-crashes-or-does-not-launch/"
+                $"https://yoursel71.github.io/RailStrap/#help"
             );
 
             ShowMessageBox(info, MessageBoxImage.Error);

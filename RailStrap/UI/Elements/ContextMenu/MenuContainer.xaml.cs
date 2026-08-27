@@ -7,6 +7,7 @@ using Windows.Win32.Foundation;
 using Windows.Win32.UI.WindowsAndMessaging;
 
 using RailStrap.Integrations;
+using RailStrap.UI.Elements.Dialogs;
 
 namespace RailStrap.UI.Elements.ContextMenu
 {
@@ -24,6 +25,8 @@ namespace RailStrap.UI.Elements.ContextMenu
         private ServerInformation? _serverInformationWindow;
 
         private ServerHistory? _gameHistoryWindow;
+
+        private LogViewerWindow? _logViewerWindow;
 
         public MenuContainer(Watcher watcher)
         {
@@ -118,8 +121,19 @@ namespace RailStrap.UI.Elements.ContextMenu
         {
             string? location = _activityWatcher?.LogLocation;
 
-            if (location is not null)
-                Utilities.ShellExecute(location);
+            if (location is null)
+                return;
+
+            if (_logViewerWindow is null)
+            {
+                _logViewerWindow = new(location);
+                _logViewerWindow.Closed += (_, _) => _logViewerWindow = null;
+            }
+
+            if (!_logViewerWindow.IsVisible)
+                _logViewerWindow.Show();
+            else
+                _logViewerWindow.Activate();
         }
 
         private void CloseRobloxMenuItem_Click(object sender, RoutedEventArgs e)

@@ -36,6 +36,8 @@ namespace RailStrap.UI.ViewModels.Settings
 
         public ICommand ExportDataCommand => new RelayCommand(ExportData);
 
+        public ICommand ImportDataCommand => new RelayCommand(ImportData);
+
         private void ExportData()
         {
             string timestamp = DateTime.UtcNow.ToString("yyyyMMdd'T'HHmmss'Z'");
@@ -80,6 +82,69 @@ namespace RailStrap.UI.ViewModels.Settings
             memStream.CopyTo(outputStream);
 
             Process.Start("explorer.exe", $"/select,\"{dialog.FileName}\"");
+        }
+
+        private void ImportData()
+        {
+            const string LOG_IDENT = "RailStrapViewModel::ImportData";
+
+            var dialog = new OpenFileDialog
+            {
+                Filter = $"{Strings.FileTypes_ZipArchive}|*.zip"
+            };
+
+            if (dialog.ShowDialog() != true)
+                return;
+
+            try
+            {
+                using var fileStream = File.OpenRead(dialog.FileName);
+                using var zipStream = new ZipInputStream(fileStream);
+
+                int imported = 0;
+                ZipEntry? entry;
+
+                while ((entry = zipStream.GetNextEntry()) is not null)
+                {
+                    if (!entry.IsFile)
+                        continue;
+
+                    string? targetPath = Path.GetFileName(entry.Name) switch
+                    {
+                        "Settings.json" => App.Settings.FileLocation,
+                        "State.json" => App.State.FileLocation,
+                        "FastFlags.json" => App.FastFlags.FileLocation,
+                        _ => null
+                    };
+
+                    if (targetPath is null)
+                        continue;
+
+                    using (var outputStream = File.Create(targetPath))
+                        zipStream.CopyTo(outputStream);
+
+                    imported++;
+                }
+
+                if (imported == 0)
+                {
+                    Frontend.ShowMessageBox(Strings.Menu_RailStrap_ImportData_NoneFound, MessageBoxImage.Warning);
+                    return;
+                }
+
+                App.Settings.Load(false);
+                App.State.Load(false);
+                App.FastFlags.Load(false);
+
+                Frontend.ShowMessageBox(Strings.Menu_RailStrap_ImportData_Success, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                App.Logger.WriteLine(LOG_IDENT, "Failed to import data");
+                App.Logger.WriteException(LOG_IDENT, ex);
+
+                Frontend.ShowMessageBox(string.Format(Strings.Menu_RailStrap_ImportData_Failed, ex.Message), MessageBoxImage.Error);
+            }
         }
 
         private void AddFilesToZipStream(ZipOutputStream zipStream, IEnumerable<string> files, string directory)

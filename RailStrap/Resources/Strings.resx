@@ -845,6 +845,15 @@ Selecting 'No' will ignore this warning and continue installation.</value>
   <data name="Logger.NoWriteMode" xml:space="preserve">
     <value>No log file will be written for this launch because RailStrap is unable to write to the folder at '{0}'</value>
   </data>
+  <data name="LogViewer.Title" xml:space="preserve">
+    <value>Log Viewer</value>
+  </data>
+  <data name="LogViewer.NotFound" xml:space="preserve">
+    <value>No log file is available yet.</value>
+  </data>
+  <data name="LogViewer.Search" xml:space="preserve">
+    <value>Find in log (Ctrl+F)</value>
+  </data>
   <data name="Common.Default" xml:space="preserve">
     <value>Default</value>
   </data>
@@ -958,7 +967,7 @@ RailStrap was installed at "{1}".</value>
     <value>Having an issue?</value>
   </data>
   <data name="LaunchMenu.Wiki.Description" xml:space="preserve">
-    <value>See the Wiki for help</value>
+    <value>Get help online</value>
   </data>
   <data name="Bootstrapper.WebView2NotFound" xml:space="preserve">
     <value>You currently do not have the WebView2 runtime installed. Some Roblox features will not work properly without it, such as the desktop app. Would you like to download it now?</value>
@@ -1191,6 +1200,21 @@ Please close any applications that may be using Roblox's files, and relaunch.</v
   <data name="Menu.RailStrap.ExportData.ExportLogs" xml:space="preserve">
     <value>All RailStrap logs</value>
     <comment>Label that appears next to a checkbox</comment>
+  </data>
+  <data name="Menu.RailStrap.ImportData.Title" xml:space="preserve">
+    <value>Import configuration</value>
+  </data>
+  <data name="Menu.RailStrap.ImportData.Description" xml:space="preserve">
+    <value>Restore settings from a previously exported RailStrap archive.</value>
+  </data>
+  <data name="Menu.RailStrap.ImportData.Success" xml:space="preserve">
+    <value>Configuration imported successfully. Restart RailStrap for all changes to take effect.</value>
+  </data>
+  <data name="Menu.RailStrap.ImportData.NoneFound" xml:space="preserve">
+    <value>That archive doesn't contain any recognised RailStrap configuration files.</value>
+  </data>
+  <data name="Menu.RailStrap.ImportData.Failed" xml:space="preserve">
+    <value>Failed to import configuration: {0}</value>
   </data>
   <data name="App.OSDeprecation.Win7_81" xml:space="preserve">
     <value>Roblox no longer supports Windows 7 or 8.1. To continue playing Roblox, please upgrade to Windows 10 or newer.</value>
