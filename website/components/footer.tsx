@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { siteAsset } from "@/lib/site";
 
 const links = [
   { href: "https://github.com/Yoursel71/RailStrap", label: "GitHub" },
@@ -13,7 +14,7 @@ export function Footer() {
       <div className="container flex flex-wrap items-start justify-between gap-6">
         <div>
           <div className="mb-2.5 flex items-center gap-2 text-[15px] font-bold">
-            <Image src="/logo.png" alt="" width={24} height={24} className="rounded-md" />
+            <Image src={siteAsset("/logo.png")} alt="" width={24} height={24} className="rounded-md" />
             RailStrap
           </div>
           <p className="max-w-[46ch] text-[13px] text-muted-foreground">

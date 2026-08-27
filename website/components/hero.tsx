@@ -4,6 +4,7 @@ import Image from "next/image";
 import { ArrowDownToLine, Github, ShieldCheck } from "lucide-react";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import { Button } from "@/components/ui/button";
+import { siteAsset } from "@/lib/site";
 
 export function Hero() {
   return (
@@ -53,7 +54,7 @@ export function Hero() {
       >
         <div className="relative h-full w-full">
           <Image
-            src="/screenshots/launch-menu.png"
+            src={siteAsset("/screenshots/launch-menu.png")}
             alt="RailStrap launch menu showing Roblox, Studio, settings, and help actions"
             fill
             sizes="(min-width: 1024px) 1000px, 90vw"

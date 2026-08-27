@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Feature } from "@/components/ui/feature-with-image";
+import { siteAsset } from "@/lib/site";
 
 export function PlaytimeFeature() {
   return (
@@ -10,7 +11,7 @@ export function PlaytimeFeature() {
       visual={
         <div className="relative h-full w-full">
           <Image
-            src="/screenshots/playtime-stats.png"
+            src={siteAsset("/screenshots/playtime-stats.png")}
             alt="RailStrap Settings, Playtime Stats page, showing the Track playtime toggle enabled"
             fill
             sizes="(min-width: 1024px) 700px, 90vw"
