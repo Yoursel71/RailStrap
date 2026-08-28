@@ -11,7 +11,7 @@ Launch Roblox, tune graphics, manage mods, track playtime, and control the exper
 [Website](https://yoursel71.github.io/RailStrap/) · [Download](https://github.com/Yoursel71/RailStrap/releases/latest) · [Report an issue](https://github.com/Yoursel71/RailStrap/issues)
 
 [![License](https://img.shields.io/github/license/Yoursel71/RailStrap)](LICENSE)
-[![Build](https://img.shields.io/github/actions/workflow/status/Yoursel71/RailStrap/ci-release.yml?branch=main&label=build)](https://github.com/Yoursel71/RailStrap/actions/workflows/ci-release.yml)
+[![Build](https://img.shields.io/github/actions/workflow/status/Yoursel71/RailStrap/ci-release.yml?branch=codex/minimal-website&label=build)](https://github.com/Yoursel71/RailStrap/actions/workflows/ci-release.yml)
 [![Latest release](https://img.shields.io/github/v/release/Yoursel71/RailStrap?color=7c5cff)](https://github.com/Yoursel71/RailStrap/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/Yoursel71/RailStrap/total?color=4f8cff)](https://github.com/Yoursel71/RailStrap/releases)
 
@@ -36,6 +36,7 @@ RailStrap replaces the standard Roblox launcher with a more capable Windows boot
 - **Custom launch experience** — use a video loading screen while Roblox starts.
 - **Selectable UI accent styles** — Rail Mono, Aurora Glass, and Rail Terminal each change accent colors, corner rounding, typography, and sidebar density, not just a palette swap.
 - **Graphics controls** — configure FPS, MSAA, texture quality, and other FastFlag presets without editing configuration files manually.
+- **Reliable frame rate cap** — sets Roblox's frame rate cap directly through its own settings file, bypassing the FastFlag allowlist Roblox introduced in late 2025 that silently broke most third-party FPS unlockers.
 - **Server tools** — view connection ping, see server location information, and quickly hop to another server.
 - **Automatic recovery** — relaunch Roblox automatically after an unexpected crash.
 - **Mods and themes** — manage content mods, cursors, sounds, and community bootstrapper themes.
