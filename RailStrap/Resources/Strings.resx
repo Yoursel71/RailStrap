@@ -477,6 +477,12 @@ Would you like to upgrade your currently installed version?</value>
   <data name="Menu.Appearance.Global.Theme.Title" xml:space="preserve">
     <value>Global Theme</value>
   </data>
+  <data name="Menu.Appearance.Global.AccentStyle.Title" xml:space="preserve">
+    <value>Accent Style</value>
+  </data>
+  <data name="Menu.Appearance.Global.AccentStyle.Description" xml:space="preserve">
+    <value>Custom styles override colors and corner rounding with a dark base, regardless of the theme above.</value>
+  </data>
   <data name="Menu.Appearance.Icon.Description" xml:space="preserve">
     <value>Choose what icon it should use.</value>
   </data>

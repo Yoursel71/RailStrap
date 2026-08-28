@@ -2511,7 +2511,25 @@ namespace RailStrap.Resources {
                 return ResourceManager.GetString("Menu.Appearance.Global.Theme.Title", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Accent Style.
+        /// </summary>
+        public static string Menu_Appearance_Global_AccentStyle_Title {
+            get {
+                return ResourceManager.GetString("Menu.Appearance.Global.AccentStyle.Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Custom styles override colors and corner rounding with a dark base, regardless of the theme above..
+        /// </summary>
+        public static string Menu_Appearance_Global_AccentStyle_Description {
+            get {
+                return ResourceManager.GetString("Menu.Appearance.Global.AccentStyle.Description", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Choose what icon it should use..
         /// </summary>

@@ -34,6 +34,7 @@ RailStrap replaces the standard Roblox launcher with a more capable Windows boot
 ## Highlights
 
 - **Custom launch experience** — use a video loading screen while Roblox starts.
+- **Selectable UI accent styles** — Rail Mono, Aurora Glass, and Rail Terminal each change accent colors, corner rounding, typography, and sidebar density, not just a palette swap.
 - **Graphics controls** — configure FPS, MSAA, texture quality, and other FastFlag presets without editing configuration files manually.
 - **Server tools** — view connection ping, see server location information, and quickly hop to another server.
 - **Automatic recovery** — relaunch Roblox automatically after an unexpected crash.
@@ -46,6 +47,10 @@ RailStrap replaces the standard Roblox launcher with a more capable Windows boot
 
 <p align="center">
   <img src="website/public/screenshots/playtime-stats.png" alt="RailStrap Playtime Stats settings" width="820" />
+</p>
+
+<p align="center">
+  <img src="website/public/screenshots/accent-styles.png" alt="RailStrap Appearance settings with selectable accent styles" width="820" />
 </p>
 
 ## Privacy
@@ -79,7 +84,7 @@ The desktop app targets .NET 6 and uses WPF. The website uses Next.js, TypeScrip
 ### Desktop app
 
 ```powershell
-git clone --recurse-submodules https://github.com/Yoursel71/RailStrap.git
+git clone https://github.com/Yoursel71/RailStrap.git
 cd RailStrap
 dotnet build RailStrap.sln
 ```
@@ -102,4 +107,4 @@ Found a bug or have an idea? Open a [bug report](https://github.com/Yoursel71/Ra
 
 RailStrap is available under the [MIT License](LICENSE). See [NOTICE.md](NOTICE.md) for attribution and third-party notices.
 
-The desktop UI uses [WPF UI](https://github.com/lepoco/wpfui) through [Bloxstrap Labs' fork](https://github.com/bloxstraplabs/wpfui).
+The desktop UI is built on a vendored copy of [WPF UI](https://github.com/lepoco/wpfui) (via [Bloxstrap Labs' fork](https://github.com/bloxstraplabs/wpfui)), customized for RailStrap's accent styles.

@@ -76,6 +76,18 @@ namespace RailStrap.UI.ViewModels.Settings
             }
         }
 
+        public IEnumerable<AccentStyle> AccentStyles { get; } = Enum.GetValues(typeof(AccentStyle)).Cast<AccentStyle>();
+
+        public AccentStyle AccentStyle
+        {
+            get => App.Settings.Prop.AccentStyle;
+            set
+            {
+                App.Settings.Prop.AccentStyle = value;
+                ((MainWindow)Window.GetWindow(_page)!).ApplyTheme();
+            }
+        }
+
         public static List<string> Languages => Locale.GetLanguages();
 
         public string SelectedLanguage 
