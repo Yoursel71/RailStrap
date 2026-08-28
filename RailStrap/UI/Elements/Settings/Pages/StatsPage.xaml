@@ -34,7 +34,8 @@
                     <Run Text="{Binding TotalPlaytimeText, Mode=OneWay}" />
                     <Run Text=" • " />
                     <Run Text="{Binding SessionCount, Mode=OneWay}" />
-                    <Run Text=" {x:Static resources:Strings.Menu_Stats_Sessions}" />
+                    <Run Text=" " />
+                    <Run Text="{x:Static resources:Strings.Menu_Stats_Sessions}" />
                 </TextBlock>
             </StackPanel>
             <ui:Button Grid.Column="1" Margin="0,0,8,0" Icon="ArrowExportRtl24" Content="{x:Static resources:Strings.Common_Export}" Command="{Binding ExportCommand}" IsEnabled="{Binding HasEntries}" />
