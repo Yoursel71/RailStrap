@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Input;
+using System.Text.Json.Nodes;
 using CommunityToolkit.Mvvm.Input;
 using ICSharpCode.SharpZipLib.Zip;
 using Microsoft.Win32;
@@ -34,9 +35,47 @@ namespace RailStrap.UI.ViewModels.Settings
 
         public bool ShouldExportLogs { get; set; } = true;
 
+        public bool ShouldExportPlugins { get; set; } = true;
+
         public ICommand ExportDataCommand => new RelayCommand(ExportData);
 
-        public ICommand ImportDataCommand => new RelayCommand(ImportData);
+        public ICommand ImportDataCommand => new RelayCommand(async () => await ImportData());
+
+        public ICommand ClearDownloadCacheCommand => new RelayCommand(ClearDownloadCache);
+
+        private void ClearDownloadCache()
+        {
+            const string LOG_IDENT = "RailStrapViewModel::ClearDownloadCache";
+
+            if (!Directory.Exists(Paths.Downloads) || !Directory.EnumerateFileSystemEntries(Paths.Downloads).Any())
+            {
+                Frontend.ShowMessageBox(Strings.Menu_RailStrap_ClearDownloadCache_Empty, MessageBoxImage.Information);
+                return;
+            }
+
+            MessageBoxResult result = Frontend.ShowMessageBox(
+                Strings.Menu_RailStrap_ClearDownloadCache_Confirm,
+                MessageBoxImage.Warning,
+                MessageBoxButton.YesNo);
+
+            if (result != MessageBoxResult.Yes)
+                return;
+
+            try
+            {
+                Directory.Delete(Paths.Downloads, true);
+                Directory.CreateDirectory(Paths.Downloads);
+
+                Frontend.ShowMessageBox(Strings.Menu_RailStrap_ClearDownloadCache_Success, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                App.Logger.WriteLine(LOG_IDENT, "Failed to clear download cache");
+                App.Logger.WriteException(LOG_IDENT, ex);
+
+                Frontend.ShowMessageBox(string.Format(Strings.Menu_RailStrap_ClearDownloadCache_Failed, ex.Message), MessageBoxImage.Error);
+            }
+        }
 
         private void ExportData()
         {
@@ -58,7 +97,6 @@ namespace RailStrap.UI.ViewModels.Settings
             {
                 var files = new List<string>()
                 {
-                    App.Settings.FileLocation,
                     App.State.FileLocation,
                     App.FastFlags.FileLocation,
                     App.Gallery.FileLocation,
@@ -66,6 +104,7 @@ namespace RailStrap.UI.ViewModels.Settings
                 };
 
                 AddFilesToZipStream(zipStream, files, "Config/");
+                AddRedactedSettingsToZipStream(zipStream, "Config/");
             }
 
             if (ShouldExportLogs && Directory.Exists(Paths.Logs))
@@ -75,6 +114,9 @@ namespace RailStrap.UI.ViewModels.Settings
 
                 AddFilesToZipStream(zipStream, files, "Logs/");
             }
+
+            if (ShouldExportPlugins && Directory.Exists(Paths.RobloxStudioPlugins))
+                AddFilesToZipStream(zipStream, Directory.GetFiles(Paths.RobloxStudioPlugins), "Plugins/");
 
             zipStream.CloseEntry();
             zipStream.Finish();
@@ -86,7 +128,7 @@ namespace RailStrap.UI.ViewModels.Settings
             Process.Start("explorer.exe", $"/select,\"{dialog.FileName}\"");
         }
 
-        private void ImportData()
+        private async Task ImportData()
         {
             const string LOG_IDENT = "RailStrapViewModel::ImportData";
 
@@ -111,15 +153,30 @@ namespace RailStrap.UI.ViewModels.Settings
                     if (!entry.IsFile)
                         continue;
 
-                    string? targetPath = Path.GetFileName(entry.Name) switch
+                    string? targetPath;
+
+                    if (entry.Name.StartsWith("Plugins/", StringComparison.OrdinalIgnoreCase))
                     {
-                        "Settings.json" => App.Settings.FileLocation,
-                        "State.json" => App.State.FileLocation,
-                        "ClientAppSettings.json" or "FastFlags.json" => App.FastFlags.FileLocation,
-                        "Gallery.json" => App.Gallery.FileLocation,
-                        "PlaytimeStats.json" => App.PlaytimeStats.FileLocation,
-                        _ => null
-                    };
+                        string fileName = Path.GetFileName(entry.Name);
+
+                        if (string.IsNullOrEmpty(fileName))
+                            continue;
+
+                        Directory.CreateDirectory(Paths.RobloxStudioPlugins);
+                        targetPath = Path.Combine(Paths.RobloxStudioPlugins, fileName);
+                    }
+                    else
+                    {
+                        targetPath = Path.GetFileName(entry.Name) switch
+                        {
+                            "Settings.json" => App.Settings.FileLocation,
+                            "State.json" => App.State.FileLocation,
+                            "ClientAppSettings.json" or "FastFlags.json" => App.FastFlags.FileLocation,
+                            "Gallery.json" => App.Gallery.FileLocation,
+                            "PlaytimeStats.json" => App.PlaytimeStats.FileLocation,
+                            _ => null
+                        };
+                    }
 
                     if (targetPath is null)
                         continue;
@@ -142,6 +199,8 @@ namespace RailStrap.UI.ViewModels.Settings
                 App.Gallery.Load(false);
                 App.PlaytimeStats.Load(false);
 
+                await ReinstallMissingGalleryItems();
+
                 Frontend.ShowMessageBox(Strings.Menu_RailStrap_ImportData_Success, MessageBoxImage.Information);
             }
             catch (Exception ex)
@@ -150,6 +209,81 @@ namespace RailStrap.UI.ViewModels.Settings
                 App.Logger.WriteException(LOG_IDENT, ex);
 
                 Frontend.ShowMessageBox(string.Format(Strings.Menu_RailStrap_ImportData_Failed, ex.Message), MessageBoxImage.Error);
+            }
+        }
+
+        // Gallery.json round-trips as part of Config, but the actual mod/theme content it
+        // references does not (redownloading beats bundling potentially large binary content).
+        private async Task ReinstallMissingGalleryItems()
+        {
+            const string LOG_IDENT = "RailStrapViewModel::ReinstallMissingGalleryItems";
+
+            var missing = App.Gallery.Prop.Installed.Where(x => !x.Files.All(File.Exists)).ToList();
+
+            if (missing.Count == 0)
+                return;
+
+            var manifest = await GalleryDownloader.GetManifest();
+
+            if (manifest is null)
+                return;
+
+            foreach (var installed in missing)
+            {
+                var source = installed.Kind == GalleryItemKind.Theme ? manifest.Themes : manifest.Mods;
+                var match = source.FirstOrDefault(x => x.Name == installed.Name);
+
+                if (match is null)
+                    continue;
+
+                try
+                {
+                    string targetDir = installed.Kind == GalleryItemKind.Theme
+                        ? Path.Combine(Paths.CustomThemes, installed.Name)
+                        : Paths.Modifications;
+
+                    installed.Files = await GalleryDownloader.DownloadAndExtract(match, targetDir);
+                }
+                catch (Exception ex)
+                {
+                    App.Logger.WriteLine(LOG_IDENT, $"Failed to reinstall gallery item '{installed.Name}'");
+                    App.Logger.WriteException(LOG_IDENT, ex);
+                }
+            }
+
+            App.Gallery.Save();
+        }
+
+        // Settings.json's FriendActivityCookieEncrypted is DPAPI-encrypted per machine/user, so it
+        // can never be decrypted after an import onto a different machine or account - export a
+        // redacted copy instead of a blob that would silently fail to decrypt.
+        private void AddRedactedSettingsToZipStream(ZipOutputStream zipStream, string directory)
+        {
+            const string LOG_IDENT = "RailStrapViewModel::AddRedactedSettingsToZipStream";
+
+            if (!File.Exists(App.Settings.FileLocation))
+                return;
+
+            try
+            {
+                string json = File.ReadAllText(App.Settings.FileLocation);
+                JsonObject? root = JsonNode.Parse(json)?.AsObject();
+
+                if (root is not null && root.ContainsKey(nameof(RailStrap.Models.Persistable.Settings.FriendActivityCookieEncrypted)))
+                    root[nameof(RailStrap.Models.Persistable.Settings.FriendActivityCookieEncrypted)] = "";
+
+                byte[] bytes = Encoding.UTF8.GetBytes(root?.ToJsonString(new JsonSerializerOptions { WriteIndented = true }) ?? json);
+
+                var entry = new ZipEntry(directory + Path.GetFileName(App.Settings.FileLocation));
+                entry.DateTime = DateTime.Now;
+
+                zipStream.PutNextEntry(entry);
+                zipStream.Write(bytes, 0, bytes.Length);
+            }
+            catch (Exception ex)
+            {
+                App.Logger.WriteLine(LOG_IDENT, "Failed to redact settings for export");
+                App.Logger.WriteException(LOG_IDENT, ex);
             }
         }
 

@@ -74,6 +74,20 @@
             <ui:ToggleSwitch IsChecked="{Binding AutoRestartOnCrash, Mode=TwoWay}" />
         </controls:OptionControl>
 
+        <controls:OptionControl
+            Header="{x:Static resources:Strings.Menu_Integrations_CrashRestartMaxAttempts_Title}"
+            Description="{x:Static resources:Strings.Menu_Integrations_CrashRestartMaxAttempts_Description}"
+            IsEnabled="{Binding AutoRestartOnCrash, Mode=OneWay}">
+            <ui:NumberBox Margin="5,0,0,0" Width="120" Min="1" Max="10" IntegersOnly="True" Value="{Binding CrashRestartMaxAttempts, Mode=TwoWay}" />
+        </controls:OptionControl>
+
+        <controls:OptionControl
+            Header="{x:Static resources:Strings.Menu_Integrations_CrashRestartRequireInGame_Title}"
+            Description="{x:Static resources:Strings.Menu_Integrations_CrashRestartRequireInGame_Description}"
+            IsEnabled="{Binding AutoRestartOnCrash, Mode=OneWay}">
+            <ui:ToggleSwitch IsChecked="{Binding CrashRestartRequireInGame, Mode=TwoWay}" />
+        </controls:OptionControl>
+
         <TextBlock Text="{x:Static resources:Strings.Menu_FriendActivity_Title}" FontSize="20" FontWeight="Medium" Margin="0,16,0,0" />
         <TextBlock Text="{x:Static resources:Strings.Menu_FriendActivity_Description}" TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
 

@@ -142,6 +142,18 @@ namespace RailStrap.UI.ViewModels.Settings
             set => App.Settings.Prop.AutoRestartOnCrash = value;
         }
 
+        public int CrashRestartMaxAttempts
+        {
+            get => App.Settings.Prop.CrashRestartMaxAttempts;
+            set => App.Settings.Prop.CrashRestartMaxAttempts = value;
+        }
+
+        public bool CrashRestartRequireInGame
+        {
+            get => App.Settings.Prop.CrashRestartRequireInGame;
+            set => App.Settings.Prop.CrashRestartRequireInGame = value;
+        }
+
         public bool FriendActivityEnabled
         {
             get => App.Settings.Prop.EnableFriendActivityPanel;

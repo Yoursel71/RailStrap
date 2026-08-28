@@ -65,6 +65,15 @@ namespace RailStrap.UI.ViewModels.Settings
             set => App.FastFlags.SetPreset("Performance.MaxFPS", value > 0 ? value.ToString() : null);
         }
 
+        // Roblox's Sept 2025 FastFlag allowlist broke DFIntTaskSchedulerTargetFps (MaxFPS above) on
+        // most clients, so this writes the frame cap into GlobalBasicSettings_13.xml instead, which
+        // isn't subject to that allowlist.
+        public int GlobalFrameRateCap
+        {
+            get => App.Settings.Prop.GlobalFrameRateCap;
+            set => App.Settings.Prop.GlobalFrameRateCap = value;
+        }
+
         public bool EnablePingOverlay
         {
             get => App.Settings.Prop.EnablePingOverlay;

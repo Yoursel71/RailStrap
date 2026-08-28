@@ -283,6 +283,9 @@ namespace RailStrap
                 allModificationsApplied = await ApplyModifications();
             }
 
+            if (!IsStudioLaunch)
+                ApplyGlobalSettings();
+
             // check registry entries for every launch, just in case the stock bootstrapper changes it back
 
             if (IsStudioLaunch)
@@ -312,6 +315,21 @@ namespace RailStrap
             Dialog?.CloseBootstrapper();
 
             ShowChangelogIfUpdated();
+        }
+
+        private void ApplyGlobalSettings()
+        {
+            const string LOG_IDENT = "Bootstrapper::ApplyGlobalSettings";
+
+            try
+            {
+                App.GlobalSettings.ApplyFrameRateCap(App.Settings.Prop.GlobalFrameRateCap);
+            }
+            catch (Exception ex)
+            {
+                App.Logger.WriteException(LOG_IDENT, ex);
+                Frontend.ShowBalloonTip(Strings.Bootstrapper_ModificationsFailed_Title, Strings.Bootstrapper_ModificationsFailed_Message, ToolTipIcon.Warning);
+            }
         }
 
         private void ShowChangelogIfUpdated()

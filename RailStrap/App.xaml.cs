@@ -66,6 +66,8 @@ namespace RailStrap
 
         public static readonly FastFlagManager FastFlags = new();
 
+        public static readonly GlobalSettingsManager GlobalSettings = new();
+
         public static readonly HttpClient HttpClient = new(
             new HttpClientLoggingHandler(
                 new HttpClientHandler { AutomaticDecompression = DecompressionMethods.All }

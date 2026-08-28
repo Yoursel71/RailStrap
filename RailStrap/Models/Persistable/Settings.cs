@@ -39,8 +39,14 @@ namespace RailStrap.Models.Persistable
         public int MaxFPSValue { get; set; } = 0;
         public bool EnablePingOverlay { get; set; } = false;
 
+        // GlobalBasicSettings_13.xml frame rate cap - unlike DFIntTaskSchedulerTargetFps (MaxFPSValue
+        // above), this isn't subject to Roblox's Sept 2025 FastFlag allowlist. 0 = don't manage it.
+        public int GlobalFrameRateCap { get; set; } = 0;
+
         // reliability
         public bool AutoRestartOnCrash { get; set; } = false;
+        public int CrashRestartMaxAttempts { get; set; } = 2;
+        public bool CrashRestartRequireInGame { get; set; } = false;
 
         // friend activity panel (opt-in; see UI/ViewModels/Settings/FriendActivityViewModel.cs)
         public bool EnableFriendActivityPanel { get; set; } = false;

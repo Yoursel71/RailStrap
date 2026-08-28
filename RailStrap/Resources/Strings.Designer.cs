@@ -2506,6 +2506,30 @@ namespace RailStrap.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Global Theme.
         /// </summary>
+        public static string Menu_RailStrap_ClearDownloadCache_Title {
+            get { return ResourceManager.GetString("Menu.RailStrap.ClearDownloadCache.Title", resourceCulture); }
+        }
+
+        public static string Menu_RailStrap_ClearDownloadCache_Description {
+            get { return ResourceManager.GetString("Menu.RailStrap.ClearDownloadCache.Description", resourceCulture); }
+        }
+
+        public static string Menu_RailStrap_ClearDownloadCache_Confirm {
+            get { return ResourceManager.GetString("Menu.RailStrap.ClearDownloadCache.Confirm", resourceCulture); }
+        }
+
+        public static string Menu_RailStrap_ClearDownloadCache_Empty {
+            get { return ResourceManager.GetString("Menu.RailStrap.ClearDownloadCache.Empty", resourceCulture); }
+        }
+
+        public static string Menu_RailStrap_ClearDownloadCache_Success {
+            get { return ResourceManager.GetString("Menu.RailStrap.ClearDownloadCache.Success", resourceCulture); }
+        }
+
+        public static string Menu_RailStrap_ClearDownloadCache_Failed {
+            get { return ResourceManager.GetString("Menu.RailStrap.ClearDownloadCache.Failed", resourceCulture); }
+        }
+
         public static string Menu_Appearance_Global_Theme_Title {
             get {
                 return ResourceManager.GetString("Menu.Appearance.Global.Theme.Title", resourceCulture);
@@ -2743,6 +2767,12 @@ namespace RailStrap.Resources {
         public static string Menu_RailStrap_ExportData_ExportLogs {
             get {
                 return ResourceManager.GetString("Menu.RailStrap.ExportData.ExportLogs", resourceCulture);
+            }
+        }
+
+        public static string Menu_RailStrap_ExportData_ExportPlugins {
+            get {
+                return ResourceManager.GetString("Menu.RailStrap.ExportData.ExportPlugins", resourceCulture);
             }
         }
 
@@ -3057,6 +3087,24 @@ namespace RailStrap.Resources {
         public static string Menu_FastFlags_Presets_MaxFPS_Description {
             get {
                 return ResourceManager.GetString("Menu.FastFlags.Presets.MaxFPS.Description", resourceCulture);
+            }
+        }
+
+        public static string Menu_FastFlags_Presets_GlobalFrameRateCap_Title {
+            get {
+                return ResourceManager.GetString("Menu.FastFlags.Presets.GlobalFrameRateCap.Title", resourceCulture);
+            }
+        }
+
+        public static string Menu_FastFlags_Presets_GlobalFrameRateCap_Description {
+            get {
+                return ResourceManager.GetString("Menu.FastFlags.Presets.GlobalFrameRateCap.Description", resourceCulture);
+            }
+        }
+
+        public static string Menu_FastFlags_Presets_GlobalFrameRateCap_Placeholder {
+            get {
+                return ResourceManager.GetString("Menu.FastFlags.Presets.GlobalFrameRateCap.Placeholder", resourceCulture);
             }
         }
 
@@ -3892,6 +3940,30 @@ namespace RailStrap.Resources {
 
         public static string Menu_Integrations_AutoRestartOnCrash_Description {
             get { return ResourceManager.GetString("Menu.Integrations.AutoRestartOnCrash.Description", resourceCulture); }
+        }
+
+        public static string Menu_Integrations_CrashRestartMaxAttempts_Title {
+            get { return ResourceManager.GetString("Menu.Integrations.CrashRestartMaxAttempts.Title", resourceCulture); }
+        }
+
+        public static string Menu_Integrations_CrashRestartMaxAttempts_Description {
+            get { return ResourceManager.GetString("Menu.Integrations.CrashRestartMaxAttempts.Description", resourceCulture); }
+        }
+
+        public static string Menu_Integrations_CrashRestartRequireInGame_Title {
+            get { return ResourceManager.GetString("Menu.Integrations.CrashRestartRequireInGame.Title", resourceCulture); }
+        }
+
+        public static string Menu_Integrations_CrashRestartRequireInGame_Description {
+            get { return ResourceManager.GetString("Menu.Integrations.CrashRestartRequireInGame.Description", resourceCulture); }
+        }
+
+        public static string Watcher_CrashRestart_Title {
+            get { return ResourceManager.GetString("Watcher.CrashRestart.Title", resourceCulture); }
+        }
+
+        public static string Watcher_CrashRestart_Message {
+            get { return ResourceManager.GetString("Watcher.CrashRestart.Message", resourceCulture); }
         }
 
         public static string Menu_FriendActivity_Title {

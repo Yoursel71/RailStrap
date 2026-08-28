@@ -7,7 +7,7 @@ namespace RailStrap
 {
     public class Watcher : IDisposable
     {
-        private const int MaxCrashRestartAttempts = 2;
+        private static readonly TimeSpan[] CrashRestartBackoff = { TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(10) };
 
         private readonly InterProcessLock _lock = new("Watcher");
 
@@ -212,14 +212,26 @@ namespace RailStrap
                 // saw a graceful disconnect) reports 0; anything else we treat as a crash
                 bool cleanExit = gameProcess is not null && exitCode == 0;
 
-                if (!cleanExit && _watcherData.CrashRestartAttempt < MaxCrashRestartAttempts)
+                // a nonzero exit also covers a user-dismissed error/kick dialog, not just a real
+                // crash - InGame narrows that down to sessions that were actually mid-game when
+                // the process died, which is a much stronger signal than the exit code alone
+                bool wasInGame = ActivityWatcher?.InGame == true;
+                bool eligibleForRestart = !cleanExit && (!App.Settings.Prop.CrashRestartRequireInGame || wasInGame);
+
+                int maxAttempts = App.Settings.Prop.CrashRestartMaxAttempts;
+
+                if (eligibleForRestart && _watcherData.CrashRestartAttempt < maxAttempts)
                 {
-                    App.Logger.WriteLine(LOG_IDENT, $"Roblox exited abnormally (code {exitCode}), attempting restart {_watcherData.CrashRestartAttempt + 1}/{MaxCrashRestartAttempts}");
+                    App.Logger.WriteLine(LOG_IDENT, $"Roblox exited abnormally (code {exitCode}, in-game: {wasInGame}), attempting restart {_watcherData.CrashRestartAttempt + 1}/{maxAttempts}");
                     await RestartAfterCrash();
+                }
+                else if (eligibleForRestart)
+                {
+                    App.Logger.WriteLine(LOG_IDENT, $"Roblox exited abnormally (code {exitCode}), but the automatic restart limit was reached");
                 }
                 else if (!cleanExit)
                 {
-                    App.Logger.WriteLine(LOG_IDENT, $"Roblox exited abnormally (code {exitCode}), but the automatic restart limit was reached");
+                    App.Logger.WriteLine(LOG_IDENT, $"Roblox exited abnormally (code {exitCode}) but was not in-game, not restarting (CrashRestartRequireInGame is enabled)");
                 }
             }
 
@@ -248,7 +260,10 @@ namespace RailStrap
                     launchArgument = _watcherData.LaunchArguments;
 
                 // A short delay avoids immediately colliding with Roblox's process/mutex cleanup.
-                await Task.Delay(TimeSpan.FromSeconds(3));
+                // Later attempts wait longer, so a genuine crash loop doesn't hammer relaunch.
+                int attempt = _watcherData!.CrashRestartAttempt;
+                TimeSpan delay = CrashRestartBackoff[Math.Min(attempt, CrashRestartBackoff.Length - 1)];
+                await Task.Delay(delay);
 
                 var startInfo = new ProcessStartInfo(Paths.Process);
 
@@ -258,9 +273,14 @@ namespace RailStrap
                     startInfo.ArgumentList.Add("-player");
 
                 startInfo.ArgumentList.Add("-crashrestart");
-                startInfo.ArgumentList.Add((_watcherData!.CrashRestartAttempt + 1).ToString(CultureInfo.InvariantCulture));
+                startInfo.ArgumentList.Add((attempt + 1).ToString(CultureInfo.InvariantCulture));
 
                 Process.Start(startInfo);
+
+                Frontend.ShowBalloonTip(
+                    Strings.Watcher_CrashRestart_Title,
+                    string.Format(Strings.Watcher_CrashRestart_Message, attempt + 1, App.Settings.Prop.CrashRestartMaxAttempts),
+                    System.Windows.Forms.ToolTipIcon.Info);
             }
             catch (Exception ex)
             {

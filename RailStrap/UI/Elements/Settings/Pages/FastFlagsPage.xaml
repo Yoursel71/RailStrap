@@ -64,6 +64,12 @@
         </controls:OptionControl>
 
         <controls:OptionControl
+            Header="{x:Static resources:Strings.Menu_FastFlags_Presets_GlobalFrameRateCap_Title}"
+            Description="{x:Static resources:Strings.Menu_FastFlags_Presets_GlobalFrameRateCap_Description}">
+            <ui:NumberBox Margin="5,0,0,0" Width="200" Min="0" Max="240" IntegersOnly="True" PlaceholderText="{x:Static resources:Strings.Menu_FastFlags_Presets_GlobalFrameRateCap_Placeholder}" Value="{Binding GlobalFrameRateCap, Mode=TwoWay}" />
+        </controls:OptionControl>
+
+        <controls:OptionControl
             Header="{x:Static resources:Strings.Menu_FastFlags_Presets_PingOverlay_Title}"
             Description="{x:Static resources:Strings.Menu_FastFlags_Presets_PingOverlay_Description}">
             <ui:ToggleSwitch IsChecked="{Binding EnablePingOverlay, Mode=TwoWay}" />

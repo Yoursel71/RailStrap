@@ -474,6 +474,24 @@ Would you like to upgrade your currently installed version?</value>
   <data name="Menu.Appearance.Description" xml:space="preserve">
     <value>Configure how RailStrap should look.</value>
   </data>
+  <data name="Menu.RailStrap.ClearDownloadCache.Title" xml:space="preserve">
+    <value>Clear download cache</value>
+  </data>
+  <data name="Menu.RailStrap.ClearDownloadCache.Description" xml:space="preserve">
+    <value>Deletes cached Roblox installer packages. They'll be redownloaded automatically next time they're needed.</value>
+  </data>
+  <data name="Menu.RailStrap.ClearDownloadCache.Confirm" xml:space="preserve">
+    <value>Clear the download cache? Nothing currently installed is affected.</value>
+  </data>
+  <data name="Menu.RailStrap.ClearDownloadCache.Empty" xml:space="preserve">
+    <value>The download cache is already empty.</value>
+  </data>
+  <data name="Menu.RailStrap.ClearDownloadCache.Success" xml:space="preserve">
+    <value>Download cache cleared.</value>
+  </data>
+  <data name="Menu.RailStrap.ClearDownloadCache.Failed" xml:space="preserve">
+    <value>Failed to clear the download cache: {0}</value>
+  </data>
   <data name="Menu.Appearance.Global.Theme.Title" xml:space="preserve">
     <value>Global Theme</value>
   </data>
@@ -793,6 +811,15 @@ Selecting 'No' will ignore this warning and continue installation.</value>
   </data>
   <data name="Menu.FastFlags.Presets.MaxFPS.Description" xml:space="preserve">
     <value>Uncap or raise Roblox's frame rate limit. Leave blank to use the default.</value>
+  </data>
+  <data name="Menu.FastFlags.Presets.GlobalFrameRateCap.Title" xml:space="preserve">
+    <value>Frame Rate Cap (reliable)</value>
+  </data>
+  <data name="Menu.FastFlags.Presets.GlobalFrameRateCap.Description" xml:space="preserve">
+    <value>Sets Roblox's own frame rate cap directly, bypassing the FastFlag allowlist that broke Max FPS above on most clients. Applied on every launch.</value>
+  </data>
+  <data name="Menu.FastFlags.Presets.GlobalFrameRateCap.Placeholder" xml:space="preserve">
+    <value>Don't override</value>
   </data>
   <data name="Menu.FastFlags.Presets.PingOverlay.Title" xml:space="preserve">
     <value>Show ping overlay</value>
@@ -1207,11 +1234,15 @@ Please close any applications that may be using Roblox's files, and relaunch.</v
     <value>All RailStrap logs</value>
     <comment>Label that appears next to a checkbox</comment>
   </data>
+  <data name="Menu.RailStrap.ExportData.ExportPlugins" xml:space="preserve">
+    <value>Roblox Studio plugins</value>
+    <comment>Label that appears next to a checkbox</comment>
+  </data>
   <data name="Menu.RailStrap.ImportData.Title" xml:space="preserve">
     <value>Import configuration</value>
   </data>
   <data name="Menu.RailStrap.ImportData.Description" xml:space="preserve">
-    <value>Restore settings from a previously exported RailStrap archive.</value>
+    <value>Restore settings from a previously exported RailStrap archive. Installed mods and themes are redownloaded automatically; a saved friend activity cookie must be re-entered.</value>
   </data>
   <data name="Menu.RailStrap.ImportData.Success" xml:space="preserve">
     <value>Configuration imported successfully. Restart RailStrap for all changes to take effect.</value>
@@ -1535,6 +1566,24 @@ Defaulting to {1}.</value>
   </data>
   <data name="Menu.Integrations.AutoRestartOnCrash.Description" xml:space="preserve">
     <value>Only triggers on an abnormal exit, not when you close Roblox yourself.</value>
+  </data>
+  <data name="Menu.Integrations.CrashRestartMaxAttempts.Title" xml:space="preserve">
+    <value>Max restart attempts</value>
+  </data>
+  <data name="Menu.Integrations.CrashRestartMaxAttempts.Description" xml:space="preserve">
+    <value>How many times to retry before giving up.</value>
+  </data>
+  <data name="Menu.Integrations.CrashRestartRequireInGame.Title" xml:space="preserve">
+    <value>Only restart if you were in a game</value>
+  </data>
+  <data name="Menu.Integrations.CrashRestartRequireInGame.Description" xml:space="preserve">
+    <value>Skips the restart for exits that happen before you actually joined a game, such as a dismissed error dialog.</value>
+  </data>
+  <data name="Watcher.CrashRestart.Title" xml:space="preserve">
+    <value>RailStrap restarted Roblox</value>
+  </data>
+  <data name="Watcher.CrashRestart.Message" xml:space="preserve">
+    <value>Roblox exited unexpectedly, so RailStrap relaunched it (attempt {0}/{1}).</value>
   </data>
 
   <data name="Menu.FriendActivity.Title" xml:space="preserve">
