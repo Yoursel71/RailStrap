@@ -26,25 +26,23 @@ Two things live in this one repo and are versioned/released independently:
 This project now exists as **several GitHub repos** under `Yoursel71` —
 know which one you're in before doing anything release- or history-related:
 
-- **`Yoursel71/RailStrap`** — the actual development repo. This is where
-  real work happens. Its default branch (`main`) currently lags behind the
-  `codex/minimal-website` branch, which is where active development has
-  actually been landing — **check which branch you're on and push to the
-  same one you branched from**, don't assume `main` is current.
-- **`Yoursel71/RailStrapper`** — a GitHub-native fork (`gh repo fork`) of
-  `bloxstraplabs/bloxstrap`, later repurposed as a second distribution
-  point: its `main` branch is force-synced to mirror RailStrap's full
-  current source, and it also carries GitHub Releases (with the built
-  `.exe` asset) mirrored from `Yoursel71/RailStrap`. Treat it as a
-  read-facing mirror — do real development in `RailStrap`, then push here.
-- **`Yoursel71/railbit-core`** — originally a GitHub-native fork of
-  `bloxstraplabs/bloxstrap` (renamed from `bloxstrap`; `railbit` was
-  already taken by an unrelated private repo). It carries **both** the
-  original upstream Bloxstrap history/branches **and** RailStrap's full
-  history force-pushed on top, plus all 44 of upstream Bloxstrap's
-  releases (v1.0.0–v2.11.4) recreated as release *records* (title/notes/
-  tag only — the original binary assets were **not** re-uploaded, only the
-  metadata).
+- **`Yoursel71/RailStrap`** — the actual development repo, and the only
+  place real work should happen. `main` and `codex/minimal-website` are
+  now the same commit (`main` was brought back up to date in Sept 2026);
+  push both so they don't drift apart again. The Pages deploy and the
+  release workflow both key off `main`.
+- **`Yoursel71/RailStrapper`** — the one and only mirror. This is a
+  GitHub-native fork of `bloxstraplabs/bloxstrap` that has been renamed
+  more than once (it was `railbit-core` for a while), so **`railbit-core`
+  is not a separate repo** — that name just redirects here, and pushing
+  to both URLs pushes to the same place. Verified with
+  `gh api repos/Yoursel71/railbit-core` returning
+  `full_name: Yoursel71/RailStrapper`, and `gh repo list Yoursel71`
+  showing exactly one fork. It carries upstream Bloxstrap's original
+  history *and* RailStrap's full history force-pushed on top, plus the 44
+  upstream releases (v1.0.0–v2.11.4) recreated as release *records*
+  (title/notes/tag only — the original binaries were never re-uploaded).
+  Treat it as read-facing: develop in `RailStrap`, then push here.
 - **`Yoursel71/railbit`** — an unrelated private repo (an early prototype
   folder, predates RailStrap). Not part of the release flow; don't touch
   it unless the user specifically asks.
@@ -55,10 +53,16 @@ classifier blocks `git remote add` outright. This works fine and touches
 no repo config:
 
 ```bash
-git push https://github.com/Yoursel71/<repo>.git 'refs/remotes/origin/*:refs/heads/*' --force
-git push https://github.com/Yoursel71/<repo>.git HEAD:main --force   # if that repo's main needs the latest too
-git push https://github.com/Yoursel71/<repo>.git 'refs/tags/*:refs/tags/*' --force
+git push https://github.com/Yoursel71/RailStrapper.git HEAD:main --force
+git push https://github.com/Yoursel71/RailStrapper.git refs/tags/vX.Y.Z:refs/tags/vX.Y.Z
+# whole-history variants, only when the mirror needs every branch/tag:
+git push https://github.com/Yoursel71/RailStrapper.git 'refs/remotes/origin/*:refs/heads/*' --force
+git push https://github.com/Yoursel71/RailStrapper.git 'refs/tags/*:refs/tags/*' --force
 ```
+
+A push to `railbit-core` reporting "Everything up-to-date" right after you
+pushed `RailStrapper` is not a bug — it's the same repo behind a rename
+redirect. Don't go hunting for a missing mirror.
 
 ## Where everything is
 
