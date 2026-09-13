@@ -4017,5 +4017,113 @@ namespace RailStrap.Resources {
         public static string Menu_FriendActivity_Empty {
             get { return ResourceManager.GetString("Menu.FriendActivity.Empty", resourceCulture); }
         }
+
+        public static string Overlay_Ping_UseInGameStats {
+            get { return ResourceManager.GetString("Overlay.Ping.UseInGameStats", resourceCulture); }
+        }
+
+        public static string Menu_FastFlags_Presets_RobloxPerformanceStats_Title {
+            get { return ResourceManager.GetString("Menu.FastFlags.Presets.RobloxPerformanceStats.Title", resourceCulture); }
+        }
+
+        public static string Menu_FastFlags_Presets_RobloxPerformanceStats_Description {
+            get { return ResourceManager.GetString("Menu.FastFlags.Presets.RobloxPerformanceStats.Description", resourceCulture); }
+        }
+
+        public static string Menu_ServerRegions_Title {
+            get { return ResourceManager.GetString("Menu.ServerRegions.Title", resourceCulture); }
+        }
+
+        public static string Menu_ServerRegions_Description {
+            get { return ResourceManager.GetString("Menu.ServerRegions.Description", resourceCulture); }
+        }
+
+        public static string Menu_ServerRegions_Clear {
+            get { return ResourceManager.GetString("Menu.ServerRegions.Clear", resourceCulture); }
+        }
+
+        public static string Menu_ServerRegions_AutoReroll_Title {
+            get { return ResourceManager.GetString("Menu.ServerRegions.AutoReroll.Title", resourceCulture); }
+        }
+
+        public static string Menu_ServerRegions_AutoReroll_Description {
+            get { return ResourceManager.GetString("Menu.ServerRegions.AutoReroll.Description", resourceCulture); }
+        }
+
+        public static string Menu_ServerRegions_MaxRerolls_Title {
+            get { return ResourceManager.GetString("Menu.ServerRegions.MaxRerolls.Title", resourceCulture); }
+        }
+
+        public static string Menu_ServerRegions_MaxRerolls_Description {
+            get { return ResourceManager.GetString("Menu.ServerRegions.MaxRerolls.Description", resourceCulture); }
+        }
+
+        public static string Menu_Connection_Title {
+            get { return ResourceManager.GetString("Menu.Connection.Title", resourceCulture); }
+        }
+
+        public static string Menu_Connection_Description {
+            get { return ResourceManager.GetString("Menu.Connection.Description", resourceCulture); }
+        }
+
+        public static string Menu_Connection_DpiBypass_Title {
+            get { return ResourceManager.GetString("Menu.Connection.DpiBypass.Title", resourceCulture); }
+        }
+
+        public static string Menu_Connection_DpiBypass_Description {
+            get { return ResourceManager.GetString("Menu.Connection.DpiBypass.Description", resourceCulture); }
+        }
+
+        public static string Menu_Connection_DpiBypass_Mode_Title {
+            get { return ResourceManager.GetString("Menu.Connection.DpiBypass.Mode.Title", resourceCulture); }
+        }
+
+        public static string Menu_Connection_DpiBypass_Mode_Description {
+            get { return ResourceManager.GetString("Menu.Connection.DpiBypass.Mode.Description", resourceCulture); }
+        }
+
+        public static string Menu_Connection_DpiBypass_Start {
+            get { return ResourceManager.GetString("Menu.Connection.DpiBypass.Start", resourceCulture); }
+        }
+
+        public static string Menu_Connection_DpiBypass_Stop {
+            get { return ResourceManager.GetString("Menu.Connection.DpiBypass.Stop", resourceCulture); }
+        }
+
+        public static string Menu_Connection_DpiBypass_Status_Running {
+            get { return ResourceManager.GetString("Menu.Connection.DpiBypass.Status.Running", resourceCulture); }
+        }
+
+        public static string Menu_Connection_DpiBypass_Status_Installed {
+            get { return ResourceManager.GetString("Menu.Connection.DpiBypass.Status.Installed", resourceCulture); }
+        }
+
+        public static string Menu_Connection_DpiBypass_Status_NotInstalled {
+            get { return ResourceManager.GetString("Menu.Connection.DpiBypass.Status.NotInstalled", resourceCulture); }
+        }
+
+        public static string Menu_Connection_DpiBypass_Failed {
+            get { return ResourceManager.GetString("Menu.Connection.DpiBypass.Failed", resourceCulture); }
+        }
+
+        public static string Dialog_DpiBypass_Offer {
+            get { return ResourceManager.GetString("Dialog.DpiBypass.Offer", resourceCulture); }
+        }
+
+        public static string Watcher_ServerRegion_Title {
+            get { return ResourceManager.GetString("Watcher.ServerRegion.Title", resourceCulture); }
+        }
+
+        public static string Watcher_ServerRegion_Mismatch {
+            get { return ResourceManager.GetString("Watcher.ServerRegion.Mismatch", resourceCulture); }
+        }
+
+        public static string Watcher_ServerRegion_Rerolling {
+            get { return ResourceManager.GetString("Watcher.ServerRegion.Rerolling", resourceCulture); }
+        }
+
+        public static string Bootstrapper_Status_ConnectionHelper {
+            get { return ResourceManager.GetString("Bootstrapper.Status.ConnectionHelper", resourceCulture); }
+        }
     }
 }

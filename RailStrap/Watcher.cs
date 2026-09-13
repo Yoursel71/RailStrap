@@ -59,7 +59,8 @@ namespace RailStrap
                 App.Settings.Prop.EnableActivityTracking ||
                 App.Settings.Prop.EnablePingOverlay ||
                 App.Settings.Prop.EnablePlaytimeStats ||
-                App.Settings.Prop.AutoRestartOnCrash;
+                App.Settings.Prop.AutoRestartOnCrash ||
+                App.Settings.Prop.PreferredServerRegions.Any();
 
             if (activityWatcherRequired)
             {
@@ -82,6 +83,9 @@ namespace RailStrap
 
                 if (App.Settings.Prop.EnablePlaytimeStats)
                     ActivityWatcher.OnGameLeave += (_, _) => RecordPlaytimeSession(ActivityWatcher.History.FirstOrDefault());
+
+                if (App.Settings.Prop.PreferredServerRegions.Any())
+                    ActivityWatcher.OnGameJoin += (_, _) => _ = CheckServerRegion();
             }
 
             _notifyIcon = new(this);
@@ -89,7 +93,111 @@ namespace RailStrap
 
         private bool _intentionalClose = false;
 
+        // set by CheckServerRegion when the joined server isn't in a preferred region; Run() picks
+        // these up after the client has actually exited so the relaunch can't race the teardown
+        private long _rerollPlaceId = 0;
+        private int _rerollAttempt = 0;
+
         public void KillRobloxProcess() => CloseProcess(_watcherData!.ProcessId, true);
+
+        /// <summary>
+        /// Roblox gives no way to ask for a server in a particular datacenter, so the only lever
+        /// available is to look at where the server we landed in actually is and roll for another
+        /// one when it isn't somewhere the user wants to play.
+        /// </summary>
+        private async Task CheckServerRegion()
+        {
+            const string LOG_IDENT = "Watcher::CheckServerRegion";
+
+            var preferred = App.Settings.Prop.PreferredServerRegions;
+
+            if (ActivityWatcher is null || !preferred.Any())
+                return;
+
+            var activity = ActivityWatcher.Data;
+
+            if (!activity.MachineAddressValid)
+                return;
+
+            string? location;
+
+            try
+            {
+                location = await activity.QueryServerLocation();
+            }
+            catch (Exception ex)
+            {
+                App.Logger.WriteException(LOG_IDENT, ex);
+                return;
+            }
+
+            var region = ServerRegion.FromLocation(location);
+
+            if (region is null)
+            {
+                // a datacenter the catalogue doesn't recognise is "no opinion", not a mismatch -
+                // rerolling on a guess would be worse than leaving the player where they are
+                App.Logger.WriteLine(LOG_IDENT, $"Could not map server location '{location}' to a known region, leaving it alone");
+                return;
+            }
+
+            if (preferred.Contains(region.Key, StringComparer.OrdinalIgnoreCase))
+            {
+                App.Logger.WriteLine(LOG_IDENT, $"Joined a preferred region ({region.DisplayName})");
+                return;
+            }
+
+            int maxRerolls = App.Settings.Prop.ServerRegionMaxRerolls;
+            int attempt = (_watcherData?.ServerRerollAttempt ?? 0) + 1;
+
+            if (!App.Settings.Prop.AutoRerollUnpreferredServer || !activity.CanReroll || attempt > maxRerolls)
+            {
+                App.Logger.WriteLine(LOG_IDENT, $"Server is in {region.DisplayName}, which isn't preferred (auto reroll off, private server, or attempt {attempt} exceeds {maxRerolls})");
+
+                Frontend.ShowBalloonTip(
+                    Strings.Watcher_ServerRegion_Title,
+                    string.Format(Strings.Watcher_ServerRegion_Mismatch, region.DisplayName),
+                    System.Windows.Forms.ToolTipIcon.Info);
+
+                return;
+            }
+
+            App.Logger.WriteLine(LOG_IDENT, $"Server is in {region.DisplayName}, rerolling ({attempt}/{maxRerolls})");
+
+            Frontend.ShowBalloonTip(
+                Strings.Watcher_ServerRegion_Title,
+                string.Format(Strings.Watcher_ServerRegion_Rerolling, region.DisplayName, attempt, maxRerolls),
+                System.Windows.Forms.ToolTipIcon.Info);
+
+            _rerollPlaceId = activity.PlaceId;
+            _rerollAttempt = attempt;
+
+            KillRobloxProcess();
+        }
+
+        private async Task RerollIntoNewServer()
+        {
+            const string LOG_IDENT = "Watcher::RerollIntoNewServer";
+
+            try
+            {
+                // same reason as the crash restart delay: give Roblox's own singleton mutex time
+                // to clear before the next client comes up
+                await Task.Delay(TimeSpan.FromSeconds(3));
+
+                var startInfo = new ProcessStartInfo(Paths.Process);
+
+                startInfo.ArgumentList.Add($"roblox://experiences/start?placeId={_rerollPlaceId}");
+                startInfo.ArgumentList.Add("-serverreroll");
+                startInfo.ArgumentList.Add(_rerollAttempt.ToString(CultureInfo.InvariantCulture));
+
+                Process.Start(startInfo);
+            }
+            catch (Exception ex)
+            {
+                App.Logger.WriteException(LOG_IDENT, ex);
+            }
+        }
 
         private void RecordPlaytimeSession(ActivityData? activity)
         {
@@ -190,11 +298,16 @@ namespace RailStrap
             }
 
             // A hard crash does not write the normal disconnect log entry, so preserve the
-            // active session before deciding whether Roblox should be restarted.
-            if (App.Settings.Prop.EnablePlaytimeStats && ActivityWatcher?.InGame == true)
+            // active session before deciding whether Roblox should be restarted. A reroll is us
+            // closing the client on purpose seconds after joining, so it isn't playtime.
+            if (App.Settings.Prop.EnablePlaytimeStats && ActivityWatcher?.InGame == true && _rerollPlaceId == 0)
                 RecordPlaytimeSession(ActivityWatcher.Data);
 
-            if (App.Settings.Prop.AutoRestartOnCrash && !_intentionalClose)
+            if (_rerollPlaceId != 0)
+            {
+                await RerollIntoNewServer();
+            }
+            else if (App.Settings.Prop.AutoRestartOnCrash && !_intentionalClose)
             {
                 int exitCode = -1;
 

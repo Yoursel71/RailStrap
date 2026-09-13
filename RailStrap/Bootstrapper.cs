@@ -20,6 +20,7 @@ using System.Windows.Shell;
 using Microsoft.Win32;
 
 using RailStrap.AppData;
+using RailStrap.Integrations;
 using RailStrap.RobloxInterfaces;
 using RailStrap.UI.Elements.Bootstrapper.Base;
 
@@ -284,7 +285,10 @@ namespace RailStrap
             }
 
             if (!IsStudioLaunch)
+            {
                 ApplyGlobalSettings();
+                await ApplyDpiBypass();
+            }
 
             // check registry entries for every launch, just in case the stock bootstrapper changes it back
 
@@ -324,11 +328,45 @@ namespace RailStrap
             try
             {
                 App.GlobalSettings.ApplyFrameRateCap(App.Settings.Prop.GlobalFrameRateCap);
+
+                if (App.Settings.Prop.ShowRobloxPerformanceStats)
+                    App.GlobalSettings.ApplyPerformanceStats(true);
             }
             catch (Exception ex)
             {
                 App.Logger.WriteException(LOG_IDENT, ex);
                 Frontend.ShowBalloonTip(Strings.Bootstrapper_ModificationsFailed_Title, Strings.Bootstrapper_ModificationsFailed_Message, ToolTipIcon.Warning);
+            }
+        }
+
+        /// <summary>
+        /// Brings up the GoodbyeDPI helper before Roblox starts, so the connection is already
+        /// usable by the time the client tries to reach Roblox's servers.
+        /// </summary>
+        private async Task ApplyDpiBypass()
+        {
+            const string LOG_IDENT = "Bootstrapper::ApplyDpiBypass";
+
+            if (!App.Settings.Prop.EnableDpiBypass || DpiBypassManager.IsRunning)
+                return;
+
+            try
+            {
+                SetStatus(Strings.Bootstrapper_Status_ConnectionHelper);
+
+                await DpiBypassManager.EnsureInstalled();
+                DpiBypassManager.Start(App.Settings.Prop.DpiBypassMode);
+            }
+            catch (Exception ex)
+            {
+                // a failed connection helper shouldn't block the launch - Roblox may well work
+                // without it, and the user can retry from settings
+                App.Logger.WriteException(LOG_IDENT, ex);
+
+                Frontend.ShowBalloonTip(
+                    Strings.Menu_Connection_DpiBypass_Title,
+                    Strings.Menu_Connection_DpiBypass_Failed,
+                    ToolTipIcon.Warning);
             }
         }
 
@@ -713,6 +751,8 @@ namespace RailStrap
                 App.Settings.Prop.EnablePingOverlay ||
                 App.Settings.Prop.EnablePlaytimeStats ||
                 App.Settings.Prop.AutoRestartOnCrash ||
+                App.Settings.Prop.PreferredServerRegions.Any() ||
+                App.Settings.Prop.EnableDpiBypass ||
                 App.LaunchSettings.TestModeFlag.Active ||
                 autoclosePids.Any();
 
@@ -721,6 +761,7 @@ namespace RailStrap
                 using var ipl = new InterProcessLock("Watcher", TimeSpan.FromSeconds(5));
 
                 int.TryParse(App.LaunchSettings.CrashRestartFlag.Data, out int crashRestartAttempt);
+                int.TryParse(App.LaunchSettings.ServerRerollFlag.Data, out int serverRerollAttempt);
 
                 var watcherData = new WatcherData
                 {
@@ -728,7 +769,8 @@ namespace RailStrap
                     LogFile = logFileName,
                     AutoclosePids = autoclosePids,
                     LaunchArguments = App.LaunchSettings.RobloxLaunchArgs,
-                    CrashRestartAttempt = crashRestartAttempt
+                    CrashRestartAttempt = crashRestartAttempt,
+                    ServerRerollAttempt = serverRerollAttempt
                 };
 
                 string watcherDataArg = Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(watcherData)));

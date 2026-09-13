@@ -20,9 +20,8 @@ namespace RailStrap.UI.Elements.Overlay
 
             _activityWatcher = activityWatcher;
 
-            var workArea = SystemParameters.WorkArea;
-            Left = workArea.Right - Width - 16;
-            Top = workArea.Bottom - Height - 16;
+            SizeChanged += (_, _) => Reposition();
+            Reposition();
 
             _timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
             _timer.Tick += (_, _) => QueryPing();
@@ -31,9 +30,22 @@ namespace RailStrap.UI.Elements.Overlay
             _activityWatcher.OnGameLeave += (_, _) => Dispatcher.Invoke(Hide_);
         }
 
+        private void Reposition()
+        {
+            var workArea = SystemParameters.WorkArea;
+
+            Left = workArea.Right - ActualWidth - 16;
+            Top = workArea.Bottom - ActualHeight - 16;
+        }
+
         private void Show_()
         {
+            PingText.Text = $"{Strings.ContextMenu_ServerInformation_Ping}: --";
+            LocationText.Visibility = Visibility.Collapsed;
+
             QueryPing();
+            QueryLocation();
+
             _timer.Start();
             Show();
         }
@@ -42,6 +54,27 @@ namespace RailStrap.UI.Elements.Overlay
         {
             _timer.Stop();
             Hide();
+        }
+
+        private async void QueryLocation()
+        {
+            // reuses the same ipinfo.io opt-in as the server details notification, so this never
+            // reaches out to a third party the user hasn't already agreed to
+            if (!App.Settings.Prop.ShowServerDetails)
+                return;
+
+            ActivityData activity = _activityWatcher.Data;
+
+            if (!activity.MachineAddressValid)
+                return;
+
+            string? location = await activity.QueryServerLocation();
+
+            if (string.IsNullOrEmpty(location) || activity != _activityWatcher.Data)
+                return;
+
+            LocationText.Text = location;
+            LocationText.Visibility = Visibility.Visible;
         }
 
         private async void QueryPing()
@@ -56,8 +89,20 @@ namespace RailStrap.UI.Elements.Overlay
             {
                 long? ping = await activity.QueryPing();
 
-                if (activity == _activityWatcher.Data)
-                    PingText.Text = ping is null ? $"{Strings.ContextMenu_ServerInformation_Ping}: --" : $"{Strings.ContextMenu_ServerInformation_Ping}: {ping} ms";
+                if (activity != _activityWatcher.Data)
+                    return;
+
+                if (ping is not null)
+                {
+                    PingText.Text = $"{Strings.ContextMenu_ServerInformation_Ping}: {ping} ms";
+                }
+                else if (ServerPing.IsUnreachable(activity.MachineAddress))
+                {
+                    // Roblox drops ICMP on practically every server, so rather than sitting on a
+                    // dead '--' forever, point at the in-game overlay that does report a real value
+                    PingText.Text = $"{Strings.ContextMenu_ServerInformation_Ping}: {Strings.Overlay_Ping_UseInGameStats}";
+                    _timer.Stop();
+                }
             }
             finally
             {

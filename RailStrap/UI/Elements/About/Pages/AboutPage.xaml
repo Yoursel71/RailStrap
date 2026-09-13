@@ -24,6 +24,10 @@
 
     <StackPanel Margin="0,0,14,14">
 
+        <Border Margin="0,0,0,20" MaxWidth="640" CornerRadius="12" ClipToBounds="True" Background="{DynamicResource ControlFillColorDefaultBrush}">
+            <Image Source="pack://application:,,,/Resources/RailbitArtwork.jpg" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality" />
+        </Border>
+
         <Grid Margin="0,0,0,24" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />

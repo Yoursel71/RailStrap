@@ -34,11 +34,12 @@ namespace RailStrap.UI.ViewModels.ContextMenu
             if (ServerLocationVisibility == Visibility.Visible)
                 QueryServerLocation();
 
-            QueryPing();
-
+            // created before the first query so the query's continuation can always stop it
             _pingTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
             _pingTimer.Tick += (_, _) => QueryPing();
             _pingTimer.Start();
+
+            QueryPing();
         }
 
         public async void QueryServerLocation()
@@ -55,9 +56,24 @@ namespace RailStrap.UI.ViewModels.ContextMenu
 
         public async void QueryPing()
         {
-            long? ping = await _activityWatcher.Data.QueryPing();
+            var activity = _activityWatcher.Data;
+            long? ping = await activity.QueryPing();
 
-            Ping = ping is null ? Strings.Common_NotAvailable : $"{ping} ms";
+            if (ping is not null)
+            {
+                Ping = $"{ping} ms";
+            }
+            else if (ServerPing.IsUnreachable(activity.MachineAddress))
+            {
+                // Roblox's servers drop ICMP, so there is nothing left to poll for - say where a
+                // real figure can be found instead of sitting on "not available" forever
+                Ping = Strings.Overlay_Ping_UseInGameStats;
+                _pingTimer.Stop();
+            }
+            else
+            {
+                Ping = Strings.Common_NotAvailable;
+            }
 
             OnPropertyChanged(nameof(Ping));
         }

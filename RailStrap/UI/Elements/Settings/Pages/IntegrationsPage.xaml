@@ -88,6 +88,61 @@
             <ui:ToggleSwitch IsChecked="{Binding CrashRestartRequireInGame, Mode=TwoWay}" />
         </controls:OptionControl>
 
+        <TextBlock Text="{x:Static resources:Strings.Menu_ServerRegions_Title}" FontSize="20" FontWeight="Medium" Margin="0,16,0,0" />
+        <TextBlock Text="{x:Static resources:Strings.Menu_ServerRegions_Description}" TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+
+        <ItemsControl Margin="0,8,0,0" ItemsSource="{Binding ServerRegions, Mode=OneTime}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <CheckBox Width="220" Margin="0,0,0,2" Content="{Binding DisplayName, Mode=OneTime}" IsChecked="{Binding IsSelected, Mode=TwoWay}" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <ui:Button Margin="0,8,0,0" Icon="Dismiss24" Content="{x:Static resources:Strings.Menu_ServerRegions_Clear}" Command="{Binding ClearServerRegionsCommand, Mode=OneTime}" />
+
+        <controls:OptionControl
+            Header="{x:Static resources:Strings.Menu_ServerRegions_AutoReroll_Title}"
+            Description="{x:Static resources:Strings.Menu_ServerRegions_AutoReroll_Description}"
+            x:Name="AutoRerollOption">
+            <ui:ToggleSwitch IsChecked="{Binding AutoRerollUnpreferredServer, Mode=TwoWay}" />
+        </controls:OptionControl>
+
+        <controls:OptionControl
+            Header="{x:Static resources:Strings.Menu_ServerRegions_MaxRerolls_Title}"
+            Description="{x:Static resources:Strings.Menu_ServerRegions_MaxRerolls_Description}"
+            IsEnabled="{Binding InnerContent.IsChecked, ElementName=AutoRerollOption, Mode=OneWay}">
+            <ui:NumberBox Margin="5,0,0,0" Width="120" Min="1" Max="10" IntegersOnly="True" Value="{Binding ServerRegionMaxRerolls, Mode=TwoWay}" />
+        </controls:OptionControl>
+
+        <TextBlock Text="{x:Static resources:Strings.Menu_Connection_Title}" FontSize="20" FontWeight="Medium" Margin="0,16,0,0" />
+        <controls:MarkdownTextBlock MarkdownText="{x:Static resources:Strings.Menu_Connection_Description}" TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+
+        <controls:OptionControl
+            Header="{x:Static resources:Strings.Menu_Connection_DpiBypass_Title}"
+            Description="{x:Static resources:Strings.Menu_Connection_DpiBypass_Description}"
+            x:Name="DpiBypassOption">
+            <ui:ToggleSwitch IsChecked="{Binding DpiBypassEnabled, Mode=TwoWay}" />
+        </controls:OptionControl>
+
+        <controls:OptionControl
+            Header="{x:Static resources:Strings.Menu_Connection_DpiBypass_Mode_Title}"
+            Description="{x:Static resources:Strings.Menu_Connection_DpiBypass_Mode_Description}"
+            IsEnabled="{Binding InnerContent.IsChecked, ElementName=DpiBypassOption, Mode=OneWay}">
+            <ui:NumberBox Margin="5,0,0,0" Width="120" Min="1" Max="9" IntegersOnly="True" Value="{Binding DpiBypassMode, Mode=TwoWay}" />
+        </controls:OptionControl>
+
+        <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+            <ui:Button Icon="Play24" Content="{x:Static resources:Strings.Menu_Connection_DpiBypass_Start}" Command="{Binding StartDpiBypassCommand, Mode=OneTime}" />
+            <ui:Button Margin="8,0,0,0" Icon="Stop24" Content="{x:Static resources:Strings.Menu_Connection_DpiBypass_Stop}" Command="{Binding StopDpiBypassCommand, Mode=OneTime}" />
+            <TextBlock Margin="12,0,0,0" VerticalAlignment="Center" Text="{Binding DpiBypassStatus, Mode=OneWay}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+        </StackPanel>
+
         <TextBlock Text="{x:Static resources:Strings.Menu_FriendActivity_Title}" FontSize="20" FontWeight="Medium" Margin="0,16,0,0" />
         <TextBlock Text="{x:Static resources:Strings.Menu_FriendActivity_Description}" TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
 

@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="Images/RailStrap.png" alt="RailStrap" width="420" />
+<img src="website/public/railstrap-artwork.png" alt="RailStrap artwork" width="920" />
 
 # RailStrap
 
@@ -37,7 +37,10 @@ RailStrap replaces the standard Roblox launcher with a more capable Windows boot
 - **Selectable UI accent styles** — Rail Mono, Aurora Glass, and Rail Terminal each change accent colors, corner rounding, typography, and sidebar density, not just a palette swap.
 - **Graphics controls** — configure FPS, MSAA, texture quality, and other FastFlag presets without editing configuration files manually.
 - **Reliable frame rate cap** — sets Roblox's frame rate cap directly through its own settings file, bypassing the FastFlag allowlist Roblox introduced in late 2025 that silently broke most third-party FPS unlockers.
-- **Server tools** — view connection ping, see server location information, and quickly hop to another server.
+- **Server tools** — see where the server you joined actually is and quickly hop to another one.
+- **Preferred server regions** — pick the datacenters you want to play in and have RailStrap roll for a different public server when you land somewhere else.
+- **Real in-game ping** — turn on Roblox's own performance stats overlay, which reports the actual client-side ping and frame rate.
+- **Connection helper** — optionally run GoodbyeDPI alongside Roblox where an internet provider blocks it, downloaded from its official release and hash-checked before use.
 - **Automatic recovery** — relaunch Roblox automatically after an unexpected crash.
 - **Mods and themes** — manage content mods, cursors, sounds, and community bootstrapper themes.
 - **Studio plugin manager** — browse, disable, and remove installed Roblox Studio plugins.

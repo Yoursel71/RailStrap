@@ -12,6 +12,7 @@ namespace RailStrap.Integrations
         private const string GameTeleportingEntry            = "[FLog::UgcExperienceController] UgcExperienceController: doTeleport: joinScriptUrl";
         private const string GameJoiningUniverseEntry        = "[FLog::GameJoinLoadTime] Report game_join_loadtime:";
         private const string GameJoiningUDMUXEntry           = "[FLog::Network] UDMUX Address = ";
+        private const string GameServerIdEntry               = "[FLog::Network] serverId: ";
         private const string GameJoinedEntry                 = "[FLog::Network] Replicator created: ";
         private const string GameDisconnectedEntry           = "[FLog::Network] Time to disconnect replication data:";
         private const string GameLeavingEntry                = "[FLog::SingleSurfaceApp] leaveUGCGameInternal";
@@ -20,8 +21,8 @@ namespace RailStrap.Integrations
         private const string GameJoinReferralPattern         = @"referral_page:([^,]+)";
         private const string GameTeleportJoinTypePattern     = @"JoinTypeId""%3a(\d+)%2c";
         private const string GameJoiningUniversePattern      = @"universeid:([0-9]+).*userid:([0-9]+)";
-        private const string GameJoiningUDMUXPattern         = @"UDMUX Address = ([0-9\.]+), Port = [0-9]+ \| RCC Server Address = ([0-9\.]+), Port = [0-9]+";
-        private const string GameJoinedEntryPattern          = @"serverId: ([0-9\.]+)\|[0-9]+";
+        private const string GameJoiningUDMUXPattern         = @"UDMUX Address = ([0-9\.]+), Port = ([0-9]+) \| RCC Server Address = ([0-9\.]+), Port = [0-9]+";
+        private const string GameServerIdPattern             = @"serverId: ([0-9\.]+)\|([0-9]+)";
         private const string GameMessageEntryPattern         = @"\[BloxstrapRPC\] (.*)";
 
         private int _logEntriesRead = 0;
@@ -252,7 +253,7 @@ namespace RailStrap.Integrations
                 {
                     var match = Regex.Match(logMessage, GameJoiningUDMUXPattern);
 
-                    if (match.Groups.Count != 3 || match.Groups[2].Value != Data.MachineAddress)
+                    if (match.Groups.Count != 4 || match.Groups[3].Value != Data.MachineAddress)
                     {
                         App.Logger.WriteLine(LOG_IDENT, "Failed to assert format for game join UDMUX entry");
                         App.Logger.WriteLine(LOG_IDENT, logMessage);
@@ -261,10 +262,28 @@ namespace RailStrap.Integrations
 
                     Data.MachineAddress = match.Groups[1].Value;
 
+                    if (int.TryParse(match.Groups[2].Value, out int udmuxPort))
+                        Data.MachinePort = udmuxPort;
+
                     if (App.Settings.Prop.ShowServerDetails)
                         _ = Data.QueryServerLocation();
 
                     App.Logger.WriteLine(LOG_IDENT, $"Server is UDMUX protected ({Data})");
+                }
+                else if (logMessage.StartsWith(GameServerIdEntry))
+                {
+                    // non-UDMUX servers never print the UDMUX line, so this is the only place the
+                    // game port shows up for them. QueryPing needs it to probe the actual game socket.
+                    var match = Regex.Match(logMessage, GameServerIdPattern);
+
+                    if (match.Groups.Count == 3 && int.TryParse(match.Groups[2].Value, out int serverPort))
+                    {
+                        if (Data.MachinePort == 0)
+                            Data.MachinePort = serverPort;
+
+                        if (string.IsNullOrEmpty(Data.MachineAddress))
+                            Data.MachineAddress = match.Groups[1].Value;
+                    }
                 }
                 else if (logMessage.StartsWith(GameJoinedEntry))
                 {

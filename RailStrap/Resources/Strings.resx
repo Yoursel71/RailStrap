@@ -825,7 +825,7 @@ Selecting 'No' will ignore this warning and continue installation.</value>
     <value>Show ping overlay</value>
   </data>
   <data name="Menu.FastFlags.Presets.PingOverlay.Description" xml:space="preserve">
-    <value>Shows a small floating ping display in the corner of the screen while in a game.</value>
+    <value>Shows a small floating panel in the corner of the screen while in a game, with the server's location and its ping where that can be measured. Roblox's servers usually ignore ping requests from outside the game client, so the panel points you at Roblox's own stats overlay (Shift+F5) when it cannot get a reading. Turning this on also turns that overlay on.</value>
   </data>
   <data name="Common.Unlimited" xml:space="preserve">
     <value>Default</value>
@@ -1624,5 +1624,90 @@ Defaulting to {1}.</value>
   </data>
   <data name="Menu.FriendActivity.Empty" xml:space="preserve">
     <value>No friends were found on this account.</value>
+  </data>
+  <data name="Overlay.Ping.UseInGameStats" xml:space="preserve">
+    <value>Shift+F5</value>
+  </data>
+  <data name="Menu.FastFlags.Presets.RobloxPerformanceStats.Title" xml:space="preserve">
+    <value>Show Roblox's performance stats</value>
+  </data>
+  <data name="Menu.FastFlags.Presets.RobloxPerformanceStats.Description" xml:space="preserve">
+    <value>Turns on Roblox's own in-game stats panel, which reports the real ping and frame rate. Roblox's servers do not answer ping requests from outside the game client, so this is the only accurate ping reading available. You can toggle the panel in game with Shift+F5.</value>
+  </data>
+  <data name="Menu.ServerRegions.Title" xml:space="preserve">
+    <value>Server regions</value>
+  </data>
+  <data name="Menu.ServerRegions.Description" xml:space="preserve">
+    <value>Roblox does not let anything choose which datacenter a server runs in. RailStrap instead looks up where the server you joined actually is, using ipinfo.io, and can roll for a different public server when it is not one you picked. Leave everything unticked for no preference. Roblox has no datacenter in Turkey; Frankfurt, Warsaw, Amsterdam, London and Paris are the closest options.</value>
+  </data>
+  <data name="Menu.ServerRegions.Clear" xml:space="preserve">
+    <value>Clear selection</value>
+  </data>
+  <data name="Menu.ServerRegions.AutoReroll.Title" xml:space="preserve">
+    <value>Reroll servers outside your regions</value>
+  </data>
+  <data name="Menu.ServerRegions.AutoReroll.Description" xml:space="preserve">
+    <value>Closes Roblox and joins a fresh public server when you land outside the regions you picked. Without this, RailStrap only tells you which region you ended up in. Does not apply to private servers or to a datacenter RailStrap does not recognise.</value>
+  </data>
+  <data name="Menu.ServerRegions.MaxRerolls.Title" xml:space="preserve">
+    <value>Maximum rerolls</value>
+  </data>
+  <data name="Menu.ServerRegions.MaxRerolls.Description" xml:space="preserve">
+    <value>How many times in a row RailStrap will reroll before giving up and leaving you where you are.</value>
+  </data>
+  <data name="Menu.Connection.Title" xml:space="preserve">
+    <value>Connection</value>
+  </data>
+  <data name="Menu.Connection.Description" xml:space="preserve">
+    <value>Some internet providers block Roblox by tampering with DNS answers and inspecting connections rather than by blocking addresses. [GoodbyeDPI](https://github.com/ValdikSS/GoodbyeDPI) works around that on your own machine.</value>
+  </data>
+  <data name="Menu.Connection.DpiBypass.Title" xml:space="preserve">
+    <value>Use the connection helper</value>
+  </data>
+  <data name="Menu.Connection.DpiBypass.Description" xml:space="preserve">
+    <value>Starts GoodbyeDPI before Roblox launches. RailStrap does not bundle it; it is downloaded from its official GitHub release and the archive is checked against a known hash first. It needs administrator rights because it loads a network driver, so Windows will ask for permission the first time it starts each session.</value>
+  </data>
+  <data name="Menu.Connection.DpiBypass.Mode.Title" xml:space="preserve">
+    <value>GoodbyeDPI mode</value>
+  </data>
+  <data name="Menu.Connection.DpiBypass.Mode.Description" xml:space="preserve">
+    <value>GoodbyeDPI's numbered modeset, paired with the any-country DNS redirect. Mode 6 is the one that generally works in Turkey. Try another number between 1 and 9 if 6 does not connect.</value>
+  </data>
+  <data name="Menu.Connection.DpiBypass.Start" xml:space="preserve">
+    <value>Start now</value>
+  </data>
+  <data name="Menu.Connection.DpiBypass.Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="Menu.Connection.DpiBypass.Status.Running" xml:space="preserve">
+    <value>Running</value>
+  </data>
+  <data name="Menu.Connection.DpiBypass.Status.Installed" xml:space="preserve">
+    <value>Installed, not running</value>
+  </data>
+  <data name="Menu.Connection.DpiBypass.Status.NotInstalled" xml:space="preserve">
+    <value>Not downloaded yet</value>
+  </data>
+  <data name="Menu.Connection.DpiBypass.Failed" xml:space="preserve">
+    <value>The connection helper could not be set up. Roblox will still be launched.</value>
+  </data>
+  <data name="Dialog.DpiBypass.Offer" xml:space="preserve">
+    <value>Roblox is blocked by some internet providers in your country, which usually stops it from connecting.
+
+RailStrap can run GoodbyeDPI, a free open-source tool, alongside Roblox to work around that. It is downloaded from its official GitHub release when first used, and Windows will ask for administrator permission each session because it loads a network driver.
+
+Would you like to turn this on? You can change it later under Integrations, in the Connection section.</value>
+  </data>
+  <data name="Watcher.ServerRegion.Title" xml:space="preserve">
+    <value>Server region</value>
+  </data>
+  <data name="Watcher.ServerRegion.Mismatch" xml:space="preserve">
+    <value>This server is in {0}, which is not one of your preferred regions.</value>
+  </data>
+  <data name="Watcher.ServerRegion.Rerolling" xml:space="preserve">
+    <value>This server is in {0}. Looking for another one ({1}/{2}).</value>
+  </data>
+  <data name="Bootstrapper.Status.ConnectionHelper" xml:space="preserve">
+    <value>Starting the connection helper...</value>
   </data>
 </root>

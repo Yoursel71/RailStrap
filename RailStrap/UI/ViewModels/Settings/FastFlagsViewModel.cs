@@ -77,7 +77,25 @@ namespace RailStrap.UI.ViewModels.Settings
         public bool EnablePingOverlay
         {
             get => App.Settings.Prop.EnablePingOverlay;
-            set => App.Settings.Prop.EnablePingOverlay = value;
+            set
+            {
+                App.Settings.Prop.EnablePingOverlay = value;
+
+                // RailStrap's own overlay can only report a ping when the server answers ICMP, and
+                // Roblox's servers essentially never do. Roblox's built-in stats overlay always
+                // has a real number, so switching one on switches the other on too.
+                if (value && !App.Settings.Prop.ShowRobloxPerformanceStats)
+                {
+                    App.Settings.Prop.ShowRobloxPerformanceStats = true;
+                    OnPropertyChanged(nameof(ShowRobloxPerformanceStats));
+                }
+            }
+        }
+
+        public bool ShowRobloxPerformanceStats
+        {
+            get => App.Settings.Prop.ShowRobloxPerformanceStats;
+            set => App.Settings.Prop.ShowRobloxPerformanceStats = value;
         }
 
         public bool ResetConfiguration

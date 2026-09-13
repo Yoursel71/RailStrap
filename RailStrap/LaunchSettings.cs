@@ -42,6 +42,8 @@ namespace RailStrap
 
         public LaunchFlag CrashRestartFlag          { get; } = new("crashrestart");
 
+        public LaunchFlag ServerRerollFlag          { get; } = new("serverreroll");
+
 #if DEBUG
         public bool BypassUpdateCheck => true;
 #else

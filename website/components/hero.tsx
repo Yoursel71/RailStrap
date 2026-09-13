@@ -99,8 +99,8 @@ export function Hero({ version }: { version: string }) {
       >
         <div className="relative h-full w-full">
           <Image
-            src={siteAsset("/screenshots/launch-menu.png")}
-            alt="RailStrap launch menu showing Roblox, Studio, settings, and help actions"
+            src={siteAsset("/railstrap-artwork.png")}
+            alt="Painted RailStrap artwork featuring two Roblox characters"
             fill
             sizes="(min-width: 1024px) 1000px, 90vw"
             className="object-cover"

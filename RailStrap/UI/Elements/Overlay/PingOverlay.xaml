@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="RailStrap Ping Overlay"
-        Width="120"
-        Height="36"
+        SizeToContent="WidthAndHeight"
+        MinWidth="120"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
@@ -14,7 +14,20 @@
         Topmost="True"
         ResizeMode="NoResize"
         WindowStartupLocation="Manual">
-    <Border Background="#B0101010" CornerRadius="6" Padding="10,4">
-        <TextBlock x:Name="PingText" Text="Ping: -- ms" Foreground="White" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" />
+    <Border Background="#B0101010" CornerRadius="6" Padding="10,6">
+        <StackPanel>
+            <TextBlock x:Name="LocationText"
+                       Text=""
+                       Foreground="#D0FFFFFF"
+                       FontSize="11"
+                       Margin="0,0,0,2"
+                       Visibility="Collapsed"
+                       HorizontalAlignment="Center" />
+            <TextBlock x:Name="PingText"
+                       Text="Ping: --"
+                       Foreground="White"
+                       FontSize="12"
+                       HorizontalAlignment="Center" />
+        </StackPanel>
     </Border>
 </Window>

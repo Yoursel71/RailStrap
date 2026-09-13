@@ -7,8 +7,8 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
     <ApplicationIcon>RailStrap.ico</ApplicationIcon>
-    <Version>2.15.0</Version>
-    <FileVersion>2.15.0</FileVersion>
+    <Version>2.16.0</Version>
+    <FileVersion>2.16.0</FileVersion>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
@@ -17,6 +17,8 @@
   <ItemGroup>
     <Resource Include="RailStrap.ico" />
     <Resource Include="Resources\RailStrapLogo.png" />
+    <Resource Include="Resources\RailStrapArtwork.png" />
+    <Resource Include="Resources\RailbitArtwork.jpg" />
     <Resource Include="Resources\Fonts\NotoSansThai-VariableFont_wdth,wght.ttf" />
     <Resource Include="Resources\Fonts\Rubik-VariableFont_wght.ttf" />
     <Resource Include="Resources\BootstrapperStyles\ByfronDialog\ByfronLogoDark.jpg" />

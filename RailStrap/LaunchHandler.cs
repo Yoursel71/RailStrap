@@ -223,12 +223,11 @@ namespace RailStrap
                 App.Terminate(ErrorCode.ERROR_FILE_NOT_FOUND);
             }
 
-            if (App.Settings.Prop.ConfirmLaunches && launchMode != LaunchMode.Studio && Mutex.TryOpenExisting("ROBLOX_singletonMutex", out var _))
-            {
-                // this currently doesn't work very well since it relies on checking the existence of the singleton mutex
-                // which often hangs around for a few seconds after the window closes
-                // it would be better to have this rely on the activity tracker when we implement IPC in the planned refactoring
+            if (launchMode != LaunchMode.Studio)
+                PromptDpiBypassIfRelevant();
 
+            if (App.Settings.Prop.ConfirmLaunches && launchMode != LaunchMode.Studio && IsRobloxPlayerRunning())
+            {
                 var result = Frontend.ShowMessageBox(Strings.Bootstrapper_ConfirmLaunch, MessageBoxImage.Warning, MessageBoxButton.YesNo);
 
                 if (result != MessageBoxResult.Yes)
@@ -269,6 +268,93 @@ namespace RailStrap
             dialog?.ShowBootstrapper();
 
             App.Logger.WriteLine(LOG_IDENT, "Exiting");
+        }
+
+        /// <summary>
+        /// Roblox has been blocked in Turkey since August 2024 by DNS poisoning and SNI-based DPI,
+        /// so Turkish players generally need a circumvention helper to connect at all. This offers
+        /// to set one up the first time, and only the first time - the answer is remembered either
+        /// way, and the setting stays reachable from the Connection section of settings.
+        /// </summary>
+        private static void PromptDpiBypassIfRelevant()
+        {
+            const string LOG_IDENT = "LaunchHandler::PromptDpiBypassIfRelevant";
+
+            if (App.State.Prop.DpiBypassPromptShown || App.Settings.Prop.EnableDpiBypass || App.LaunchSettings.QuietFlag.Active)
+                return;
+
+            if (!IsLikelyBehindTurkishBlock())
+                return;
+
+            App.State.Prop.DpiBypassPromptShown = true;
+            App.State.Save();
+
+            var result = Frontend.ShowMessageBox(Strings.Dialog_DpiBypass_Offer, MessageBoxImage.Question, MessageBoxButton.YesNo);
+
+            if (result != MessageBoxResult.Yes)
+            {
+                App.Logger.WriteLine(LOG_IDENT, "Connection helper was declined");
+                return;
+            }
+
+            App.Settings.Prop.EnableDpiBypass = true;
+            App.Settings.Save();
+
+            App.Logger.WriteLine(LOG_IDENT, "Connection helper was enabled");
+        }
+
+        private static bool IsLikelyBehindTurkishBlock()
+        {
+            try
+            {
+                if (RegionInfo.CurrentRegion.TwoLetterISORegionName.Equals("TR", StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+            catch (Exception)
+            {
+                // RegionInfo throws on a few exotic locale configurations; fall through to language
+            }
+
+            return CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("tr", StringComparison.OrdinalIgnoreCase)
+                || CultureInfo.InstalledUICulture.TwoLetterISOLanguageName.Equals("tr", StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// ROBLOX_singletonMutex lingers for a while after the client window closes, so testing it
+        /// on its own made the "Roblox is already running" prompt fire on practically every launch.
+        /// An actual live RobloxPlayerBeta process is the thing we really care about, so the mutex
+        /// is now only a cheap pre-check for it.
+        /// </summary>
+        private static bool IsRobloxPlayerRunning()
+        {
+            const string LOG_IDENT = "LaunchHandler::IsRobloxPlayerRunning";
+
+            if (!Mutex.TryOpenExisting("ROBLOX_singletonMutex", out var mutex))
+                return false;
+
+            mutex.Dispose();
+
+            string processName = new AppData.RobloxPlayerData().ProcessName;
+
+            foreach (var process in Utilities.GetProcessesSafe())
+            {
+                using (process)
+                {
+                    try
+                    {
+                        if (process.ProcessName.Equals(processName, StringComparison.OrdinalIgnoreCase) && !process.HasExited)
+                            return true;
+                    }
+                    catch (Exception)
+                    {
+                        // the process can exit out from under us, or be one we aren't allowed to query
+                    }
+                }
+            }
+
+            App.Logger.WriteLine(LOG_IDENT, "Singleton mutex exists but no live Roblox process does, not prompting");
+
+            return false;
         }
 
         public static void LaunchWatcher()

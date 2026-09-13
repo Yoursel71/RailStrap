@@ -5,11 +5,42 @@ using Microsoft.Win32;
 
 using CommunityToolkit.Mvvm.Input;
 
+using RailStrap.Integrations;
 using RailStrap.UI.Elements.Dialogs;
 using RailStrap.Utility;
 
 namespace RailStrap.UI.ViewModels.Settings
 {
+    /// <summary>
+    /// Checkbox-friendly wrapper around a <see cref="ServerRegion"/>, backed directly by the
+    /// persisted preference list so ticking a box is the whole interaction.
+    /// </summary>
+    public class ServerRegionSelection : NotifyPropertyChangedViewModel
+    {
+        private readonly ServerRegion _region;
+
+        public ServerRegionSelection(ServerRegion region) => _region = region;
+
+        public string DisplayName => _region.DisplayName;
+
+        public bool IsSelected
+        {
+            get => App.Settings.Prop.PreferredServerRegions.Contains(_region.Key, StringComparer.OrdinalIgnoreCase);
+            set
+            {
+                var preferred = App.Settings.Prop.PreferredServerRegions;
+
+                if (value && !IsSelected)
+                    preferred.Add(_region.Key);
+                else if (!value)
+                    foreach (string key in preferred.Where(x => x.Equals(_region.Key, StringComparison.OrdinalIgnoreCase)).ToList())
+                        preferred.Remove(key);
+            }
+        }
+
+        public void Refresh() => OnPropertyChanged(nameof(IsSelected));
+    }
+
     public class IntegrationsViewModel : NotifyPropertyChangedViewModel
     {
         public ICommand AddIntegrationCommand => new RelayCommand(AddIntegration);
@@ -152,6 +183,101 @@ namespace RailStrap.UI.ViewModels.Settings
         {
             get => App.Settings.Prop.CrashRestartRequireInGame;
             set => App.Settings.Prop.CrashRestartRequireInGame = value;
+        }
+
+        // server regions
+
+        /// <summary>
+        /// Roblox exposes no way to ask for a datacenter, so this is a preference rather than a
+        /// guarantee: RailStrap looks up where the server it landed in actually is, and can roll
+        /// for another one when it isn't somewhere you wanted.
+        /// </summary>
+        public ObservableCollection<ServerRegionSelection> ServerRegions { get; } =
+            new(ServerRegion.All.Select(x => new ServerRegionSelection(x)));
+
+        public bool AutoRerollUnpreferredServer
+        {
+            get => App.Settings.Prop.AutoRerollUnpreferredServer;
+            set => App.Settings.Prop.AutoRerollUnpreferredServer = value;
+        }
+
+        public int ServerRegionMaxRerolls
+        {
+            get => App.Settings.Prop.ServerRegionMaxRerolls;
+            set => App.Settings.Prop.ServerRegionMaxRerolls = value;
+        }
+
+        public ICommand ClearServerRegionsCommand => new RelayCommand(ClearServerRegions);
+
+        private void ClearServerRegions()
+        {
+            App.Settings.Prop.PreferredServerRegions.Clear();
+
+            foreach (var region in ServerRegions)
+                region.Refresh();
+        }
+
+        // connection helper (GoodbyeDPI)
+
+        public bool DpiBypassEnabled
+        {
+            get => App.Settings.Prop.EnableDpiBypass;
+            set
+            {
+                App.Settings.Prop.EnableDpiBypass = value;
+                OnPropertyChanged(nameof(DpiBypassStatus));
+            }
+        }
+
+        public int DpiBypassMode
+        {
+            get => App.Settings.Prop.DpiBypassMode;
+            set
+            {
+                if (DpiBypassManager.IsValidMode(value))
+                    App.Settings.Prop.DpiBypassMode = value;
+            }
+        }
+
+        public string DpiBypassStatus
+        {
+            get
+            {
+                if (DpiBypassManager.IsRunning)
+                    return Strings.Menu_Connection_DpiBypass_Status_Running;
+
+                return DpiBypassManager.IsInstalled
+                    ? Strings.Menu_Connection_DpiBypass_Status_Installed
+                    : Strings.Menu_Connection_DpiBypass_Status_NotInstalled;
+            }
+        }
+
+        public ICommand StartDpiBypassCommand => new RelayCommand(StartDpiBypass);
+
+        public ICommand StopDpiBypassCommand => new RelayCommand(StopDpiBypass);
+
+        private async void StartDpiBypass()
+        {
+            const string LOG_IDENT = "IntegrationsViewModel::StartDpiBypass";
+
+            try
+            {
+                await DpiBypassManager.EnsureInstalled();
+                DpiBypassManager.Start(App.Settings.Prop.DpiBypassMode);
+            }
+            catch (Exception ex)
+            {
+                App.Logger.WriteException(LOG_IDENT, ex);
+                Frontend.ShowMessageBox(Strings.Menu_Connection_DpiBypass_Failed, System.Windows.MessageBoxImage.Error);
+            }
+
+            OnPropertyChanged(nameof(DpiBypassStatus));
+        }
+
+        private void StopDpiBypass()
+        {
+            DpiBypassManager.Stop();
+            OnPropertyChanged(nameof(DpiBypassStatus));
         }
 
         public bool FriendActivityEnabled

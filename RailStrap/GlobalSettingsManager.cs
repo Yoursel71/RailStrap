@@ -103,5 +103,18 @@ namespace RailStrap
             SetValue("int", "FramerateCap", frameRateCap.ToString());
             Save();
         }
+
+        /// <summary>
+        /// Toggles Roblox's own in-game performance stats overlay (the one bound to Shift+F5),
+        /// which reports the real client-side ping and frame rate. RailStrap can't measure ping
+        /// from outside the client - Roblox's servers drop ICMP - so this is how the value
+        /// actually reaches the user.
+        /// </summary>
+        public void ApplyPerformanceStats(bool visible)
+        {
+            Load();
+            SetValue("bool", "PerformanceStatsVisible", visible ? "true" : "false");
+            Save();
+        }
     }
 }

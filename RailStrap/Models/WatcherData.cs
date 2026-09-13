@@ -11,5 +11,7 @@
         public string? LaunchArguments { get; set; }
 
         public int CrashRestartAttempt { get; set; }
+
+        public int ServerRerollAttempt { get; set; }
     }
 }

@@ -209,11 +209,85 @@ touch. Verified real-file facts, in case you're extending this:
   closed "not planned" with no recorded reasoning visible in the thread —
   worth knowing RailStrap made a different call here, not that upstream's
   call was necessarily wrong.
-- Roblox also has a built-in in-game stats/FPS display
-  (`PerformanceStatsVisible` in the same file) toggled in-client with
-  **Shift+F5** — RailStrap doesn't show an FPS number anywhere itself (see
-  "no fabricated FPS counter" below), so that's the answer if a user asks
-  "where do I see my FPS."
+- `PerformanceStatsVisible` (`<bool>`, same file) is Roblox's own in-game
+  stats display, toggled in-client with **Shift+F5**. RailStrap manages it
+  through `GlobalSettingsManager.ApplyPerformanceStats`, behind
+  `Settings.Prop.ShowRobloxPerformanceStats`. This is where a real FPS *and*
+  ping figure comes from — RailStrap never invents either one (see "no
+  fabricated FPS counter" below).
+
+## Ping can't be measured from outside the Roblox client
+
+Verified on this machine against live servers (`128.116.21.33`,
+`128.116.5.33`, taken from `[FLog::Network] serverId:` lines in a real
+player log):
+
+- **ICMP echo is dropped outright — 100% loss.** The same machine pings
+  `1.1.1.1` in ~34 ms, so this is Roblox's side, not the network's.
+- **No TCP port answers.** 443, 80, 53, 22 and the game's own UDP port
+  number all fail to connect.
+- A traceroute dies several hops short of the datacenter (last reply is an
+  NTT backbone hop at ~83-107 ms), so "ping the last responsive hop" is not
+  a usable approximation either.
+
+That is why the old `ActivityData.QueryPing` — a plain `Ping.SendPingAsync`
+— effectively never returned a number and the ping overlay sat on `--`
+forever. `Utility/ServerPing.cs` still attempts ICMP (some networks and
+regions do get replies) but gives up on an address after two failures
+instead of retrying it every few seconds for the whole session, and both
+the overlay and the server information dialog then point at Shift+F5,
+which reports the client's real round trip.
+
+**Don't "fix" this by inventing a number.** If you want to try harder, the
+only remaining avenue is speaking Roblox's own UDP game protocol to
+`MachineAddress:MachinePort` (both are parsed and stored on `ActivityData`
+now), and it is unverified whether Roblox's RakNet fork answers unconnected
+pings at all — test it against a live server before building on it.
+
+## Preferred server regions
+
+Roblox exposes **no API for choosing a datacenter**, so this is matching
+after the fact, not targeting:
+`ActivityWatcher.OnGameJoin` → `Watcher.CheckServerRegion()` → ipinfo.io
+lookup (`ActivityData.QueryServerLocation`, globally cached) →
+`ServerRegion.FromLocation` maps the city to one of the entries in
+`Models/Entities/ServerRegion.cs`.
+
+- An **unrecognised datacenter is deliberately treated as "no opinion"**,
+  never as a mismatch — rerolling on a guess is worse than leaving the
+  player alone. Add entries to the catalogue rather than loosening this.
+- **Roblox has no datacenter in Turkey** and never has. Frankfurt, Warsaw,
+  Amsterdam, London and Paris are the closest, which is why they lead the
+  list. If a user asks for "Istanbul", that's the honest answer.
+- Rerolling kills the client and relaunches RailStrap with
+  `-serverreroll N`, which rides through `WatcherData.ServerRerollAttempt`
+  exactly like `-crashrestart` does. The relaunch happens from `Run()`
+  **after** `WaitForExitAsync` returns, not from the event handler, so it
+  can't race the watcher's own teardown.
+- A rerolled session is explicitly excluded from playtime stats.
+
+## Connection helper (GoodbyeDPI)
+
+`Integrations/DpiBypassManager.cs`. Roblox has been blocked in Turkey since
+August 2024 by DNS poisoning plus SNI-based DPI, so Turkish players need a
+circumvention helper to connect at all. `LaunchHandler.PromptDpiBypassIfRelevant`
+offers it once (and only once — `State.Prop.DpiBypassPromptShown`) when the
+machine's region or UI language is Turkish.
+
+- **RailStrap does not bundle GoodbyeDPI.** It's fetched from the upstream
+  GitHub release on demand and the archive's SHA-256 is checked against a
+  pinned constant before anything is extracted. If you bump the version,
+  re-download and re-pin the hash — don't drop the check.
+- The invocation is the shipped `2_any_country_dnsredir.cmd` with the mode
+  number swapped: `goodbyedpi.exe -6 --dns-addr 77.88.8.8 --dns-port 1253
+  --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253`, run from the
+  `x86_64`/`x86` folder so `WinDivert.dll` and the `.sys` driver resolve.
+  Mode 6 is `-f 2 -e 2 --wrong-seq --reverse-frag --max-payload`.
+- It needs **administrator rights** (WinDivert is a kernel driver), so
+  starting it raises UAC. `Start` is skipped entirely when a `goodbyedpi`
+  process is already running, so it's one prompt per session, not per
+  launch. An unelevated RailStrap **cannot** terminate it directly, which
+  is why `Stop` shells out to an elevated `taskkill`.
 
 ### Website — `website/`
 
@@ -360,13 +434,18 @@ Researched findings worth knowing before picking this up:
 - **Raw string literals (`"""..."""`) require C# 11 and this project
   targets net6.0's default (C# 10)** — `dotnet build` fails with CS8936.
   Use a normal (verbatim or concatenated) string literal instead.
-- **The Settings ping overlay uses raw ICMP (`System.Net.NetworkInformation.Ping`)
-  against the game server's IP**, not a real game-protocol probe. Cloud
-  hosts (Roblox's servers included) sometimes drop ICMP at the firewall
-  even when the actual game traffic is fine, which would make the overlay
-  show `--` forever despite nothing being wrong. If a user reports "ping
-  overlay doesn't work," this is the first thing to suspect — verify with
-  a live in-game session before assuming it's a code bug.
+- **Roblox's servers drop ICMP, so the ping overlay never worked.** This
+  was suspected for a while and is now measured — see the "Ping can't be
+  measured from outside the Roblox client" section above for the numbers.
+  Anything that wants to show a ping figure has to go through Roblox's own
+  Shift+F5 overlay.
+- **The `ROBLOX_singletonMutex` lingers for seconds after the client window
+  closes**, so testing only for it made the "Roblox is already running"
+  confirmation fire on practically every launch. `ConfirmLaunches` now
+  requires a live `RobloxPlayerBeta` process too
+  (`LaunchHandler.IsRobloxPlayerRunning`); the mutex is just a cheap
+  pre-check. The old behaviour had a code comment admitting it "doesn't
+  work very well" — it was a real user-visible bug, not a nitpick.
 - **A bare type name that collides with an enclosing namespace segment
   resolves to the namespace, not the type** — e.g. `nameof(Settings.Foo)`
   written inside `RailStrap.UI.ViewModels.Settings.SomeViewModel` fails to

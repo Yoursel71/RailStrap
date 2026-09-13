@@ -39,9 +39,24 @@ namespace RailStrap.Models.Persistable
         public int MaxFPSValue { get; set; } = 0;
         public bool EnablePingOverlay { get; set; } = false;
 
+        // Roblox's own Shift+F5 stats overlay. RailStrap can't measure ping from outside the client
+        // (Roblox's servers drop ICMP), so this is the only way to actually see a real ping figure.
+        public bool ShowRobloxPerformanceStats { get; set; } = false;
+
         // GlobalBasicSettings_13.xml frame rate cap - unlike DFIntTaskSchedulerTargetFps (MaxFPSValue
         // above), this isn't subject to Roblox's Sept 2025 FastFlag allowlist. 0 = don't manage it.
         public int GlobalFrameRateCap { get; set; } = 0;
+
+        // preferred server regions - Roblox has no API to pick a region, so RailStrap matches the
+        // joined server's location against this list and can reroll into a fresh server when it
+        // doesn't match. Empty means no preference.
+        public ObservableCollection<string> PreferredServerRegions { get; set; } = new();
+        public bool AutoRerollUnpreferredServer { get; set; } = false;
+        public int ServerRegionMaxRerolls { get; set; } = 3;
+
+        // connection helper (GoodbyeDPI) - off unless explicitly enabled; see Integrations/DpiBypassManager.cs
+        public bool EnableDpiBypass { get; set; } = false;
+        public int DpiBypassMode { get; set; } = 6;
 
         // reliability
         public bool AutoRestartOnCrash { get; set; } = false;

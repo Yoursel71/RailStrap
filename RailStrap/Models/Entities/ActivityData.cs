@@ -40,6 +40,12 @@ namespace RailStrap.Models.Entities
 
         public string MachineAddress { get; set; } = string.Empty;
 
+        /// <summary>
+        /// The UDP game port, parsed from the UDMUX entry or the 'serverId: ip|port' entry.
+        /// 0 when the log hasn't reported it (yet).
+        /// </summary>
+        public int MachinePort { get; set; } = 0;
+
         public bool MachineAddressValid => !string.IsNullOrEmpty(MachineAddress) && !MachineAddress.StartsWith("10.");
 
         public bool IsTeleport { get; set; } = false;
@@ -150,29 +156,12 @@ namespace RailStrap.Models.Entities
             return location;
         }
 
-        public async Task<long?> QueryPing()
-        {
-            const string LOG_IDENT = "ActivityData::QueryPing";
-
-            if (!MachineAddressValid)
-                return null;
-
-            try
-            {
-                using var ping = new System.Net.NetworkInformation.Ping();
-                var reply = await ping.SendPingAsync(MachineAddress, 2000);
-
-                if (reply.Status == System.Net.NetworkInformation.IPStatus.Success)
-                    return reply.RoundtripTime;
-            }
-            catch (Exception ex)
-            {
-                App.Logger.WriteLine(LOG_IDENT, $"Failed to ping {MachineAddress}");
-                App.Logger.WriteException(LOG_IDENT, ex);
-            }
-
-            return null;
-        }
+        /// <summary>
+        /// Roblox's game servers silently drop ICMP echo requests, so this returns null far more
+        /// often than not - see <see cref="ServerPing"/> for the details and for what the UI is
+        /// expected to show instead.
+        /// </summary>
+        public Task<long?> QueryPing() => ServerPing.Measure(MachineAddress, MachineAddressValid);
 
         public override string ToString() => $"{PlaceId}/{JobId}";
 
