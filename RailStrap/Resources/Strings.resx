@@ -1638,7 +1638,7 @@ Defaulting to {1}.</value>
     <value>Server regions</value>
   </data>
   <data name="Menu.ServerRegions.Description" xml:space="preserve">
-    <value>Roblox does not let anything choose which datacenter a server runs in. RailStrap instead looks up where the server you joined actually is, using ipinfo.io, and can roll for a different public server when it is not one you picked. Leave everything unticked for no preference. Roblox has no datacenter in Turkey; Frankfurt, Warsaw, Amsterdam, London and Paris are the closest options.</value>
+    <value>Roblox does not let anything choose which datacenter a server runs in. RailStrap instead looks up where the server you joined actually is, using ipinfo.io, and can roll for a different public server when it is not one you picked. Leave everything unticked for no preference. Not every location below is serving every experience, so picking only one region may mean a lot of rerolling.</value>
   </data>
   <data name="Menu.ServerRegions.Clear" xml:space="preserve">
     <value>Clear selection</value>

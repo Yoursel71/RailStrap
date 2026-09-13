@@ -260,9 +260,27 @@ lookup (`ActivityData.QueryServerLocation`, globally cached) →
 - An **unrecognised datacenter is deliberately treated as "no opinion"**,
   never as a mismatch — rerolling on a guess is worse than leaving the
   player alone. Add entries to the catalogue rather than loosening this.
-- **Roblox has no datacenter in Turkey** and never has. Frankfurt, Warsaw,
-  Amsterdam, London and Paris are the closest, which is why they lead the
-  list. If a user asks for "Istanbul", that's the honest answer.
+- **Roblox's datacenter list grows, and public trackers lag badly behind
+  it.** An Istanbul entry was left out on the strength of two server-region
+  sites and pre-May-2026 knowledge; the repo owner, who plays from Turkey
+  through the connection helper, had been landing on Istanbul servers.
+  Trackers are not authoritative — a player's own `[FLog::Network]
+  serverId:` lines are. Err towards *including* a location: an entry that
+  never matches is a harmless checkbox, while a missing one makes a real
+  server look unrecognised, which is the failure that actually hurts.
+- Note the separate facts here: **Roblox running a datacenter in a country
+  does not mean Roblox is reachable there.** Istanbul servers exist *and*
+  the Turkish block is still in force as of Sept 2026 — web sources
+  claiming the ban lifted in June 2026 contradict what the owner reports
+  first-hand, so don't weaken the connection helper's copy on their say-so.
+- **Catalogue order is load-bearing**: `FromLocation` takes the first
+  match, and "Santiago de Queretaro" contains "Santiago". Queretaro must
+  stay ahead of Santiago or Mexican servers report as Chilean. Watch for
+  the same trap when adding cities.
+- Matching is a case-insensitive substring test over the whole
+  `"City, Region, CC"` string, and `OrdinalIgnoreCase` does **not** equate
+  the Turkish dotted `İ` with `I` — that's why Istanbul carries both
+  spellings, as Zurich/Zürich, Milan/Milano and Sao/São Paulo do.
 - Rerolling kills the client and relaunches RailStrap with
   `-serverreroll N`, which rides through `WatcherData.ServerRerollAttempt`
   exactly like `-crashrestart` does. The relaunch happens from `Run()`
